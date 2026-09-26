@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { stallions as featuredStallions } from '../data/stallionData';
+import { stallions as featuredStallions, switch2StallionFeatures } from '../data/stallionData';
 import { masterData, RawStallion } from '../utils/breedingEngine';
 import {
   Award,
@@ -10,7 +10,8 @@ import {
   ArrowRight,
   DollarSign,
   Search,
-  CheckCircle2
+  CheckCircle2,
+  Info
 } from 'lucide-react';
 
 interface StallionSectionProps {
@@ -135,6 +136,24 @@ export const StallionSection: React.FC<StallionSectionProps> = ({ searchQuery })
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Switch2版 種牡馬新仕様・特記事項カード */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {switch2StallionFeatures.map((feat, idx) => (
+          <div key={idx} className="bg-slate-800/80 border border-slate-700 p-3.5 rounded-xl shadow-md space-y-2">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-amber-400">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>{feat.title}</span>
+            </div>
+            <p className="text-xs text-slate-300 leading-snug">{feat.summary}</p>
+            <ul className="text-[11px] text-slate-400 space-y-1 list-disc list-inside">
+              {feat.details.map((d, dIdx) => (
+                <li key={dIdx} className="leading-tight">{d}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
 
       {/* モード1: 全237頭 種牡馬データベース */}

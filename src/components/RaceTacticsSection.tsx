@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { jockeys, raceTactics, paddockSigns, raceRoutes, overseasRaces } from '../data/raceTacticsData';
-import { Flag, Eye, Users, Compass, Globe, Sparkles, CheckCircle2, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { jockeys, raceTactics, paddockSigns, raceRoutes, overseasRaces, switch2RaceSystemFeatures } from '../data/raceTacticsData';
+import { Flag, Eye, Users, Compass, Globe, Sparkles, CheckCircle2, AlertTriangle, ShieldCheck, Zap, Trophy } from 'lucide-react';
 
 interface RaceTacticsSectionProps {
   searchQuery: string;
@@ -63,6 +63,33 @@ export const RaceTacticsSection: React.FC<RaceTacticsSectionProps> = ({ searchQu
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Switch2版 新システムハイライト（大逃げ・トラッキング改善・ダート三冠・BC拡張） */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+        {switch2RaceSystemFeatures.map((feat, idx) => (
+          <div
+            key={idx}
+            className="bg-slate-800/80 border border-rose-500/30 rounded-2xl p-4 shadow-lg flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="p-1.5 rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                  {idx === 0 ? <Zap className="w-4 h-4" /> : idx === 1 ? <Trophy className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
+                </div>
+                <span className="text-[10px] font-black tracking-wider text-rose-400 uppercase bg-rose-950/60 px-2 py-0.5 rounded border border-rose-800/50">
+                  Switch2実機仕様
+                </span>
+              </div>
+              <h4 className="text-xs sm:text-sm font-extrabold text-white mb-1.5 leading-snug">
+                {feat.title}
+              </h4>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                {feat.desc}
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* サブタブ1: レース作戦＆前壁対策 */}

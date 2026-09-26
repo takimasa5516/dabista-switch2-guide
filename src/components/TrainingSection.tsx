@@ -12,7 +12,8 @@ import {
   preDebutRoutines,
   postDebutRoutines,
   purposeRecipes,
-  preDebut4WeekRotation
+  preDebut4WeekRotation,
+  omakaseTrainingAdvice
 } from '../data/genericTrainingRecipes';
 import { WeightCalculator } from './WeightCalculator';
 import {
@@ -79,7 +80,7 @@ export const TrainingSection: React.FC<TrainingSectionProps> = ({ searchQuery })
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20 mb-2">
               <Dumbbell className="w-3.5 h-3.5" />
-              <span>週2回（水・木）調教枠を完全攻略</span>
+              <span>Switch2版：週1回進行・実機調教システム完全同期</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
               調教理論・汎用メニュー＆ベスト体重計算
@@ -164,34 +165,38 @@ export const TrainingSection: React.FC<TrainingSectionProps> = ({ searchQuery })
                 </div>
               </div>
               <span className="text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2.5 py-1 rounded-full">
-                迷ったらこの2本！
+                実機同期
               </span>
             </div>
 
+            <div className="bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-xl text-xs text-amber-200">
+              {beginnerGoldenRoutine.systemNotice}
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="bg-slate-900/80 border border-emerald-600/30 p-3.5 rounded-xl space-y-1">
+              <div className="bg-slate-900/80 border border-emerald-600/30 p-3.5 rounded-xl space-y-1.5">
                 <div className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-amber-400"></span>
-                  <span>水曜日 調教</span>
+                  <span>デビュー前 育成サイクル</span>
                 </div>
-                <div className="text-base font-black text-white">
-                  {beginnerGoldenRoutine.wednesday}
+                <div className="text-sm font-bold text-white leading-snug">
+                  {beginnerGoldenRoutine.preDebutCycle}
                 </div>
                 <p className="text-xs text-slate-300 leading-snug">
-                  スタミナの土台を構築。芝よりも脚元への負担が小さく安全に鍛えられる万能調教。
+                  ダートでスタミナの基礎を固め、坂路でパワー・スピードを上乗せ。併せ馬で根性を点火！
                 </p>
               </div>
 
-              <div className="bg-slate-900/80 border border-emerald-600/30 p-3.5 rounded-xl space-y-1">
+              <div className="bg-slate-900/80 border border-emerald-600/30 p-3.5 rounded-xl space-y-1.5">
                 <div className="text-xs font-bold text-blue-400 flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-blue-400"></span>
-                  <span>木曜日 調教</span>
+                  <span>レース転戦時（中3週ローテ）</span>
                 </div>
-                <div className="text-base font-black text-white">
-                  {beginnerGoldenRoutine.thursday}
+                <div className="text-sm font-bold text-white leading-snug">
+                  {beginnerGoldenRoutine.inSeasonCycle}
                 </div>
                 <p className="text-xs text-slate-300 leading-snug">
-                  最大のメリットは「脚元を故障する心配がゼロ」！安全に実戦スピードを引き上げる。
+                  レース翌週は休養かプールで疲労抜き。2週前に本追い切り、出走週は馬なりでベスト体重合致！
                 </p>
               </div>
             </div>
@@ -199,7 +204,7 @@ export const TrainingSection: React.FC<TrainingSectionProps> = ({ searchQuery })
             <div className="bg-emerald-950/40 border border-emerald-500/20 p-3 rounded-xl text-xs text-emerald-200 leading-relaxed flex items-start gap-2">
               <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
               <div>
-                <strong>プロの微調整ルール: </strong>
+                <strong>プロの体重＆スタッフ運用鉄則: </strong>
                 {beginnerGoldenRoutine.adaptation}
               </div>
             </div>
@@ -233,11 +238,8 @@ export const TrainingSection: React.FC<TrainingSectionProps> = ({ searchQuery })
                       {w.week}
                     </span>
                     <div className="bg-slate-800/80 p-2 rounded-lg text-xs space-y-1 mb-1.5">
-                      <div className="text-emerald-300 font-bold flex items-center justify-between">
-                        <span>水曜:</span> <span>{w.wednesday}</span>
-                      </div>
-                      <div className="text-blue-300 font-bold flex items-center justify-between">
-                        <span>木曜:</span> <span>{w.thursday}</span>
+                      <div className="text-emerald-300 font-bold">
+                        調教: <span>{w.wednesday}</span>
                       </div>
                     </div>
                     <p className="text-[11px] text-slate-300 leading-snug">
@@ -250,6 +252,23 @@ export const TrainingSection: React.FC<TrainingSectionProps> = ({ searchQuery })
 
             <div className="bg-amber-950/30 border border-amber-500/30 p-3 rounded-xl text-xs text-amber-200">
               <strong>★ 運用鉄則:</strong> {preDebut4WeekRotation.goldenRule}
+            </div>
+          </div>
+
+          {/* 実機仕様：おまかせ調教の特徴と注意点 */}
+          <div className="bg-gradient-to-r from-blue-950/40 via-slate-800 to-indigo-950/40 border border-blue-500/30 rounded-2xl p-4 sm:p-5 shadow-xl space-y-3">
+            <div className="flex items-center gap-2 border-b border-slate-700 pb-2">
+              <Sparkles className="w-4 h-4 text-cyan-400" />
+              <h3 className="text-base font-black text-white">{omakaseTrainingAdvice.title}</h3>
+            </div>
+            <p className="text-xs text-slate-300 leading-relaxed">{omakaseTrainingAdvice.summary}</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {omakaseTrainingAdvice.points.map((pt, idx) => (
+                <div key={idx} className="bg-slate-900/80 border border-slate-700/80 p-3 rounded-xl space-y-1">
+                  <span className="text-xs font-bold text-cyan-300 block">{pt.title}</span>
+                  <p className="text-xs text-slate-300 leading-snug">{pt.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -386,7 +405,7 @@ export const TrainingSection: React.FC<TrainingSectionProps> = ({ searchQuery })
                 </h3>
               </div>
               <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
-                週2回（水・木）調教システム完全対応
+                Switch2実機仕様（週1回カレンダー進行・施設スタッフ連動）
               </span>
             </div>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
@@ -439,6 +458,12 @@ export const TrainingSection: React.FC<TrainingSectionProps> = ({ searchQuery })
                       {rank.strength}
                     </p>
                   </div>
+
+                  {rank.staffSynergy && (
+                    <div className="bg-emerald-950/40 border border-emerald-500/30 p-2 rounded-xl text-[11px] text-emerald-200 leading-snug">
+                      <strong>✨ スタッフ効果:</strong> {rank.staffSynergy}
+                    </div>
+                  )}
 
                   <div className="bg-slate-900/60 border border-slate-700/40 p-2.5 rounded-xl text-[11px] text-amber-200/90 leading-snug">
                     <strong>⚠️ 注意点:</strong> {rank.caution}

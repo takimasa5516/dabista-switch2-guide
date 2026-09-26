@@ -61,7 +61,7 @@ export interface Stallion {
 export interface TrainingCourse {
   id: string;
   name: string;
-  intensity: '馬なり' | '強め' | '一杯';
+  intensity: '馬なり' | '強め' | '一杯' | '強め / 馬なり';
   effects: {
     speed: number;
     stamina: number;
@@ -99,7 +99,7 @@ export interface PreStablingComment {
 // 資金稼ぎ
 export interface MoneyGuide {
   id: string;
-  stage: '序盤（1〜3年目）' | '中盤（4〜10年目）' | '終盤（牧場完成後）' | '馬券術' | 'セリ市裏技';
+  stage: '序盤（1〜3年目）' | '中盤（4〜10年目）' | '終盤（牧場完成後）' | '馬券術' | 'セリ市裏技' | '初期設定（モード選択）' | 'ミッション活用術' | '実機馬券術＆小ネタ' | '中盤以降の経営術';
   title: string;
   summary: string;
   steps: string[];
@@ -124,7 +124,7 @@ export interface Jockey {
 
 // レース作戦・前壁対策
 export interface RaceTacticInfo {
-  tactic: '逃げ' | '先行' | '差し' | '追込';
+  tactic: '大逃げ' | '逃げ' | '先行' | '差し' | '追込';
   pros: string[];
   cons: string[];
   antiTrafficTip: string;

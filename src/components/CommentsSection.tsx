@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { preStablingComments, commentChecklistTimeline } from '../data/commentsData';
+import { preStablingComments, commentChecklistTimeline, switch2CommentFeatures } from '../data/commentsData';
 import { PreStablingComment } from '../types';
 import { SimulatorSection } from './SimulatorSection';
-import { MessageSquareQuote, Calendar, Sparkles, Filter, CheckCircle2, HelpCircle } from 'lucide-react';
+import { MessageSquareQuote, Calendar, Sparkles, Filter, CheckCircle2, HelpCircle, FileText, Award } from 'lucide-react';
 
 interface CommentsSectionProps {
   searchQuery: string;
@@ -88,6 +88,38 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ searchQuery })
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Switch2版 新システムハイライト（育成メモ自動記録＆能力印開示） */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {switch2CommentFeatures.map((feat, idx) => (
+          <div
+            key={idx}
+            className="bg-slate-800/80 border border-amber-600/30 rounded-2xl p-4 sm:p-5 shadow-lg relative overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-xl pointer-events-none" />
+            <div className="flex items-start gap-3">
+              <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex-shrink-0 mt-0.5">
+                {idx === 0 ? <FileText className="w-5 h-5" /> : <Award className="w-5 h-5" />}
+              </div>
+              <div className="space-y-1.5">
+                <span className="text-[10px] font-black tracking-wider text-amber-400 uppercase bg-amber-950/60 px-2 py-0.5 rounded border border-amber-800/50">
+                  Switch2実機仕様
+                </span>
+                <h3 className="text-sm sm:text-base font-extrabold text-white">
+                  {feat.title}
+                </h3>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  {feat.description}
+                </p>
+                <div className="pt-2 text-xs text-amber-300 font-medium flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                  <span>{feat.tip}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
 
       {activeSubTab === 'simulator' ? (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { moneyGuides, initialFarmExpansionPriority } from '../data/moneyData';
-import { Coins, TrendingUp, AlertTriangle, CheckCircle2, Building, DollarSign, Sparkles } from 'lucide-react';
+import { moneyGuides, initialFarmExpansionPriority, allStaffList } from '../data/moneyData';
+import { Coins, TrendingUp, AlertTriangle, CheckCircle2, Building, DollarSign, Sparkles, Users, UserCheck } from 'lucide-react';
 
 interface MoneySectionProps {
   searchQuery: string;
@@ -9,7 +9,7 @@ interface MoneySectionProps {
 export const MoneySection: React.FC<MoneySectionProps> = ({ searchQuery }) => {
   const [selectedStage, setSelectedStage] = useState<string>('all');
 
-  const stages = ['all', '序盤（1〜3年目）', '馬券術', '中盤（4〜10年目）', 'セリ市裏技'];
+  const stages = ['all', '初期設定（モード選択）', 'ミッション活用術', '実機馬券術＆小ネタ', '中盤以降の経営術'];
 
   const filteredGuides = moneyGuides.filter((guide) => {
     const matchesSearch =
@@ -166,6 +166,61 @@ export const MoneySection: React.FC<MoneySectionProps> = ({ searchQuery }) => {
           ))}
         </div>
       </div>
+
+      {/* 牧場スタッフ雇用一覧（Switch2新要素） */}
+      <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-4 sm:p-6 shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+          <div className="flex items-center gap-2">
+            <Users className="w-5 h-5 text-emerald-400" />
+            <h3 className="text-base sm:text-lg font-bold text-white">
+              牧場スタッフ全14名 雇用ガイド（Switch2新機能）
+            </h3>
+          </div>
+          <span className="text-[11px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full self-start sm:self-auto">
+            事務所拡張で雇用可能
+          </span>
+        </div>
+        <p className="text-xs text-slate-300 mb-4 leading-relaxed">
+          Switch2版では「事務所」を拡張することで、各種専門スタッフを牧場に雇用可能になりました。<br className="hidden sm:inline" />
+          特に事務スタッフ「代田しおり」を雇うと、馬の能力や適性が<strong>「育成メモ」に自動記録</strong>され、調教や育成の管理が格段に快適になります。
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {allStaffList.map((staff) => (
+            <div
+              key={staff.id}
+              className={`p-3.5 rounded-xl border flex flex-col justify-between transition-all ${
+                staff.name === '代田 しおり' || staff.name === 'Dr.啓司' || staff.name === '曽江 直子'
+                  ? 'bg-emerald-950/20 border-emerald-500/40 shadow-sm'
+                  : 'bg-slate-900/60 border-slate-700/60'
+              }`}
+            >
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-1.5">
+                  <div className="flex items-center gap-2">
+                    <UserCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                    <span className="text-xs font-bold text-white">{staff.name}</span>
+                    <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                      {staff.role}
+                    </span>
+                  </div>
+                  <span className="text-xs font-black text-amber-400 font-mono">
+                    月額 {staff.monthlyFee}万円
+                  </span>
+                </div>
+                <p className="text-xs text-slate-300 leading-relaxed pl-6">
+                  {staff.effect}
+                </p>
+              </div>
+              <div className="mt-2.5 pt-2 border-t border-slate-800/80 pl-6 flex items-center justify-between text-[11px] text-slate-400">
+                <span>雇用条件:</span>
+                <span className="text-amber-300/90 font-medium">{staff.condition}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
+
