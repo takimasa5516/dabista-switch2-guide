@@ -1,15 +1,42 @@
 import React, { useState } from 'react';
-import { trainingCourses, growthTypes, weightAndFatigueGuide } from '../data/trainingData';
-import { preDebutRoutines, postDebutRoutines, purposeRecipes } from '../data/genericTrainingRecipes';
+import {
+  trainingCourses,
+  growthTypes,
+  weightAndFatigueGuide,
+  trainingRanking,
+  beginnerGoldenRoutine,
+  injuryPreventionRules,
+  balancePhilosophy
+} from '../data/trainingData';
+import {
+  preDebutRoutines,
+  postDebutRoutines,
+  purposeRecipes,
+  preDebut4WeekRotation
+} from '../data/genericTrainingRecipes';
 import { WeightCalculator } from './WeightCalculator';
-import { Dumbbell, Scale, HeartPulse, Sparkles, AlertCircle, ShieldAlert, Award, Calculator, Calendar, Zap, CheckCircle2 } from 'lucide-react';
+import {
+  Dumbbell,
+  Scale,
+  HeartPulse,
+  Sparkles,
+  AlertCircle,
+  ShieldAlert,
+  Award,
+  Calculator,
+  Calendar,
+  Zap,
+  CheckCircle2,
+  BookOpen,
+  ShieldCheck
+} from 'lucide-react';
 
 interface TrainingSectionProps {
   searchQuery: string;
 }
 
 export const TrainingSection: React.FC<TrainingSectionProps> = ({ searchQuery }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'routines' | 'calculator' | 'courses' | 'weight' | 'growth'>('routines');
+  const [activeSubTab, setActiveSubTab] = useState<'routines' | 'theory' | 'calculator' | 'courses' | 'weight' | 'growth'>('routines');
 
   const filteredCourses = trainingCourses.filter(c =>
     c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -52,13 +79,13 @@ export const TrainingSection: React.FC<TrainingSectionProps> = ({ searchQuery })
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20 mb-2">
               <Dumbbell className="w-3.5 h-3.5" />
-              <span>育成・レース調整の極意</span>
+              <span>週2回（水・木）調教枠を完全攻略</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-              調教メニュー＆デビュー前・後汎用調整法
+              調教理論・汎用メニュー＆ベスト体重計算
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-              入厩からゲート試験・デビュー仕上げ、レース間（中1〜4週）の調整ルーティン、そしてベスト馬体重一発計算機を完全網羅。
+              「ダート強め＋坂路」の黄金基本形から、デビュー前4週・8週ローテ、レース間調整、故障防止5大鉄則、馬体重逆算まで完全網羅。
             </p>
           </div>
           <div className="flex flex-wrap gap-1.5 bg-slate-800/80 border border-slate-700 p-1.5 rounded-xl">
@@ -70,6 +97,15 @@ export const TrainingSection: React.FC<TrainingSectionProps> = ({ searchQuery })
             >
               <Calendar className="w-3.5 h-3.5" />
               <span>汎用調教メニュー</span>
+            </button>
+            <button
+              onClick={() => setActiveSubTab('theory')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                activeSubTab === 'theory' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>調教理論＆TOP6</span>
             </button>
             <button
               onClick={() => setActiveSubTab('calculator')}
@@ -111,6 +147,112 @@ export const TrainingSection: React.FC<TrainingSectionProps> = ({ searchQuery })
       {/* サブタブ1: 汎用調教メニュー（デビュー前・後＆目的別レシピ） */}
       {activeSubTab === 'routines' && (
         <div className="space-y-6">
+          {/* 初心者黄金基本調教ハイライトカード */}
+          <div className="bg-gradient-to-br from-emerald-950/70 via-slate-900 to-slate-900 border-2 border-emerald-500/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-emerald-800/40 pb-2.5">
+              <div className="flex items-center gap-2">
+                <span className="p-1.5 bg-emerald-500/20 text-emerald-400 rounded-lg">
+                  <Award className="w-5 h-5" />
+                </span>
+                <div>
+                  <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider block">
+                    Basic Golden Routine
+                  </span>
+                  <h3 className="text-base sm:text-lg font-black text-white">
+                    {beginnerGoldenRoutine.title}
+                  </h3>
+                </div>
+              </div>
+              <span className="text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2.5 py-1 rounded-full">
+                迷ったらこの2本！
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="bg-slate-900/80 border border-emerald-600/30 p-3.5 rounded-xl space-y-1">
+                <div className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+                  <span>水曜日 調教</span>
+                </div>
+                <div className="text-base font-black text-white">
+                  {beginnerGoldenRoutine.wednesday}
+                </div>
+                <p className="text-xs text-slate-300 leading-snug">
+                  スタミナの土台を構築。芝よりも脚元への負担が小さく安全に鍛えられる万能調教。
+                </p>
+              </div>
+
+              <div className="bg-slate-900/80 border border-emerald-600/30 p-3.5 rounded-xl space-y-1">
+                <div className="text-xs font-bold text-blue-400 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                  <span>木曜日 調教</span>
+                </div>
+                <div className="text-base font-black text-white">
+                  {beginnerGoldenRoutine.thursday}
+                </div>
+                <p className="text-xs text-slate-300 leading-snug">
+                  最大のメリットは「脚元を故障する心配がゼロ」！安全に実戦スピードを引き上げる。
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-emerald-950/40 border border-emerald-500/20 p-3 rounded-xl text-xs text-emerald-200 leading-relaxed flex items-start gap-2">
+              <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+              <div>
+                <strong>プロの微調整ルール: </strong>
+                {beginnerGoldenRoutine.adaptation}
+              </div>
+            </div>
+          </div>
+
+          {/* ブログ推奨：デビュー前おすすめ4週実践ローテーション */}
+          <div className="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 sm:p-5 shadow-xl space-y-3.5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-slate-700/60 pb-2.5">
+              <div>
+                <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider block">
+                  4-Week Rotation
+                </span>
+                <h3 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                  <span>{preDebut4WeekRotation.title}</span>
+                </h3>
+              </div>
+              <span className="text-xs font-bold text-slate-300 bg-slate-900 px-2.5 py-1 rounded border border-slate-700 self-start sm:self-auto">
+                スタミナ軸＋スピード＋根性
+              </span>
+            </div>
+
+            <p className="text-xs text-slate-300 leading-relaxed">
+              {preDebut4WeekRotation.description}
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {preDebut4WeekRotation.weeks.map((w, idx) => (
+                <div key={idx} className="bg-slate-900/80 border border-slate-700/70 p-3 rounded-xl flex flex-col justify-between space-y-2">
+                  <div>
+                    <span className="text-xs font-black text-amber-300 block mb-1">
+                      {w.week}
+                    </span>
+                    <div className="bg-slate-800/80 p-2 rounded-lg text-xs space-y-1 mb-1.5">
+                      <div className="text-emerald-300 font-bold flex items-center justify-between">
+                        <span>水曜:</span> <span>{w.wednesday}</span>
+                      </div>
+                      <div className="text-blue-300 font-bold flex items-center justify-between">
+                        <span>木曜:</span> <span>{w.thursday}</span>
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-slate-300 leading-snug">
+                      {w.effect}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-amber-950/30 border border-amber-500/30 p-3 rounded-xl text-xs text-amber-200">
+              <strong>★ 運用鉄則:</strong> {preDebut4WeekRotation.goldenRule}
+            </div>
+          </div>
+
           {/* ① デビュー前ルーティン */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
@@ -214,16 +356,140 @@ export const TrainingSection: React.FC<TrainingSectionProps> = ({ searchQuery })
           <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-4 sm:p-5 shadow-xl space-y-3">
             <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
               <Zap className="w-4 h-4 text-amber-400" />
-              <span>目的別・即効調教レシピ（プリセット）</span>
+              <span>目的別・即効調教レシピ（プリセット6選）</span>
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {purposeRecipes.map((recipe, idx) => (
-                <div key={idx} className="bg-slate-900/70 p-3 rounded-xl border border-slate-700/60 text-xs space-y-1">
-                  <h4 className="font-black text-amber-300">{recipe.purpose}</h4>
-                  <div className="font-bold text-white bg-slate-800 p-1.5 rounded">{recipe.menu}</div>
-                  <p className="text-slate-300 text-[11px]">{recipe.effect}</p>
+                <div key={idx} className="bg-slate-900/70 p-3.5 rounded-xl border border-slate-700/60 text-xs space-y-1.5 flex flex-col justify-between">
+                  <div>
+                    <h4 className="font-black text-amber-300">{recipe.purpose}</h4>
+                    <div className="font-bold text-white bg-slate-800 p-2 rounded mt-1">{recipe.menu}</div>
+                  </div>
+                  <p className="text-slate-300 text-[11px] leading-relaxed pt-1 border-t border-slate-800">{recipe.effect}</p>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* サブタブ2: 調教理論＆TOP6（ペンギン研究室攻略準拠） */}
+      {activeSubTab === 'theory' && (
+        <div className="space-y-6 animate-fadeIn">
+          {/* 理論ヘッダー */}
+          <div className="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 sm:p-5 shadow-xl space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-2.5">
+              <div className="flex items-center gap-2">
+                <Award className="w-5 h-5 text-amber-400" />
+                <h3 className="text-base sm:text-lg font-black text-white">
+                  Switch2版『ダビスタ2』調教完全攻略理論
+                </h3>
+              </div>
+              <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+                週2回（水・木）調教システム完全対応
+              </span>
+            </div>
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              『ダービースタリオン2』で強い馬を育てるために最重要なのが調教です。
+              強い調教を連発すれば強くなるわけではなく、疲労蓄積と故障リスクを抑えながら、スピード・スタミナ・勝負根性・体調・馬体重をバランス良く高めることがG1制覇への絶対条件となります。
+            </p>
+          </div>
+
+          {/* おすすめ調教ランキング TOP6 */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-black text-white flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                <span>使いやすさ抜群！おすすめ調教ランキング TOP6</span>
+              </h3>
+              <span className="text-xs text-slate-400">実戦での有用性・安全性基準</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+              {trainingRanking.map((rank) => (
+                <div
+                  key={rank.rank}
+                  className="bg-slate-800/70 border border-slate-700/80 hover:border-emerald-500/40 rounded-2xl p-4 shadow-lg flex flex-col justify-between space-y-2.5 transition-all"
+                >
+                  <div>
+                    <div className="flex items-center justify-between gap-2 border-b border-slate-700/60 pb-2">
+                      <div className="flex items-center gap-2">
+                        <span className={`w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs ${
+                          rank.rank === 1 ? 'bg-amber-500 text-slate-950 shadow-md' :
+                          rank.rank === 2 ? 'bg-slate-300 text-slate-950' :
+                          rank.rank === 3 ? 'bg-amber-700 text-white' :
+                          'bg-slate-800 text-slate-300 border border-slate-700'
+                        }`}>
+                          {rank.rank}位
+                        </span>
+                        <h4 className="text-base font-black text-white">
+                          {rank.courseName} <span className="text-xs font-normal text-slate-400">({rank.intensity})</span>
+                        </h4>
+                      </div>
+                      <span className="text-xs font-mono font-bold text-amber-400">
+                        {rank.rating}
+                      </span>
+                    </div>
+
+                    <div className="mt-2 text-xs font-bold text-emerald-400">
+                      目的: {rank.primaryPurpose}
+                    </div>
+
+                    <p className="mt-1 text-xs text-slate-200 leading-relaxed">
+                      {rank.strength}
+                    </p>
+                  </div>
+
+                  <div className="bg-slate-900/60 border border-slate-700/40 p-2.5 rounded-xl text-[11px] text-amber-200/90 leading-snug">
+                    <strong>⚠️ 注意点:</strong> {rank.caution}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 最強馬を作る調教バランス論 */}
+          <div className="bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-indigo-500/30 rounded-2xl p-4 sm:p-5 shadow-xl space-y-3.5">
+            <div className="border-b border-indigo-500/20 pb-2">
+              <h3 className="text-base font-black text-white flex items-center gap-2">
+                <span>{balancePhilosophy.title}</span>
+              </h3>
+              <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                {balancePhilosophy.description}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center">
+              {balancePhilosophy.roles.map((r, i) => (
+                <div key={i} className="bg-slate-800/80 border border-slate-700 p-3 rounded-xl space-y-1">
+                  <div className="text-2xl">{r.icon}</div>
+                  <div className="text-xs font-bold text-white">{r.track}</div>
+                  <div className="text-[11px] text-indigo-300">{r.role}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 故障を防ぐ5大鉄則 */}
+          <div className="bg-slate-800/70 border border-red-500/30 rounded-2xl p-4 sm:p-5 shadow-xl space-y-3">
+            <div className="flex items-center gap-2 text-red-400 border-b border-slate-700 pb-2">
+              <ShieldAlert className="w-5 h-5" />
+              <h3 className="text-base font-black text-white">
+                故障を防ぐための5大鉄則マニュアル
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {injuryPreventionRules.map((rule, idx) => (
+                <div key={idx} className="bg-slate-900/70 border border-slate-800 p-3 rounded-xl text-xs space-y-1">
+                  <h4 className="font-bold text-red-400">{rule.title}</h4>
+                  <p className="text-slate-300 text-[11px] leading-relaxed">{rule.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-red-950/30 border border-red-500/20 p-3 rounded-xl text-xs text-red-200">
+              <strong>★ 格言:</strong> 「調教できるから毎回調教する」のではなく、「必要なときだけ調教して休ませる」という引き算の判断が名馬を育てます。
             </div>
           </div>
         </div>

@@ -1,10 +1,151 @@
 import { TrainingCourse, GrowthType } from '../types';
 
+export interface TrainingCourseRanking {
+  rank: number;
+  courseName: string;
+  intensity: string;
+  rating: string;
+  primaryPurpose: string;
+  strength: string;
+  caution: string;
+}
+
+export const trainingRanking: TrainingCourseRanking[] = [
+  {
+    rank: 1,
+    courseName: 'ダート',
+    intensity: '強め',
+    rating: '★★★★★',
+    primaryPurpose: 'スタミナ強化（普段の育成の万能中心核）',
+    strength: '芝よりも脚元への負担が小さく、故障リスクが低い。スタミナを安定して伸ばせる万能調教。迷ったらこれを選べば大きく失敗しない。',
+    caution: '短距離馬でも基礎スタミナがないと粘りを欠くため、全馬に必須。'
+  },
+  {
+    rank: 2,
+    courseName: '坂路',
+    intensity: '強め / 馬なり',
+    rating: '★★★★★',
+    primaryPurpose: 'スピード強化（安全なスピードアップ）',
+    strength: '【最大の魅力】調教そのもので脚元を故障する心配が一切ない！芝で脚元が心配な馬でも安全にスピードを鍛え上げられる。',
+    caution: '疲労がたまりやすいデメリットがある。レース直前の連発は疲労残りで凡走の原因になるため注意。'
+  },
+  {
+    rank: 3,
+    courseName: 'ダート併せ',
+    intensity: '強め / 一杯',
+    rating: '★★★★★',
+    primaryPurpose: 'スタミナ ＋ 勝負根性・気性強化',
+    strength: 'スタミナを鍛えつつ、他馬と競ることで「勝負根性」と「気性面の成長」を同時に引き出す強力な一手。',
+    caution: '馬体・体力への負担が非常に大きい。毎週の連発や水木連続は厳禁。調子を動かす効果もあるため絶好調馬への無理使いは避ける。'
+  },
+  {
+    rank: 4,
+    courseName: '芝',
+    intensity: '強め（基本）',
+    rating: '★★★★☆',
+    primaryPurpose: '純粋スピード強化',
+    strength: '強め以上で追うことでスピード能力を一気に伸ばせる。中長距離馬であってもスピードは不可欠。',
+    caution: '脚元への負担が大きく故障リスクが高め。「芝一杯」の毎週連発は厳禁。「芝強め」を中心に坂路と使い分けるのが鉄則。'
+  },
+  {
+    rank: 5,
+    courseName: 'ウッド',
+    intensity: '強め',
+    rating: '★★★★☆',
+    primaryPurpose: 'スタミナ強化（脚元保護型）',
+    strength: 'ダートより脚元への負担が小さく、安全性を意識してスタミナを伸ばせる。',
+    caution: '【重要】「疲労が抜けにくくなる」という独自の特徴がある。レースが続く期間中よりも、デビュー前など余裕のある時期に向く。'
+  },
+  {
+    rank: 6,
+    courseName: 'プール',
+    intensity: '馬なり',
+    rating: '★★★★☆',
+    primaryPurpose: 'スタミナ微増・体重調整・疲労ケア',
+    strength: '脚元への負担が完全にゼロで、疲労も残りにくい。スタミナも微増する。',
+    caution: '能力の劇的な上昇は望めないため、レース前微調整・体重絞り・脚元不安馬の運動維持・疲労抜きとして補助的に活用する。'
+  }
+];
+
+export const beginnerGoldenRoutine = {
+  title: '初心者に最もおすすめの黄金基本調教',
+  wednesday: 'ダート強め（スタミナ強化＆安全育成）',
+  thursday: '坂路（スピード強化＆故障リスクゼロ）',
+  rationale: 'ダビスタ2は週に2回（水曜日と木曜日）調教可能。水曜にダートでスタミナを鍛え、木曜に坂路で安全にスピードを鍛えることで、能力が極めてバランスよく成長します。',
+  adaptation: '坂路は疲労がたまりやすいため、馬の体調や疲労サインが出たときは木曜日を休養（調教なし）にするかプール調教に変更するのがプロの流儀です。'
+};
+
+export const injuryPreventionRules = [
+  {
+    title: '1. 強い調教（一杯）を連発しない',
+    desc: '毎回「一杯」で追うのは初心者が最も陥りやすい罠です。普段は「強め」を中心とし、一杯は体重を絞りたい時や最後の勝負仕上げに限定しましょう。'
+  },
+  {
+    title: '2. 芝調教を使いすぎない',
+    desc: '芝はスピードを伸ばせますが脚元への負荷が最大です。故障を避けるため、スピード強化は故障リスクゼロの「坂路」と併用・分担しましょう。'
+  },
+  {
+    title: '3. 疲労がたまっているときは休む',
+    desc: '調教師から「少し疲れが…」などのコメントが出たり調教タイムが落ちたら、無理せず休養させて疲労を完全に抜きましょう。'
+  },
+  {
+    title: '4. レース直前（レース週）に無理をしない',
+    desc: 'レース直前に強い調教を2本行うのは危険です。レース週は「水曜ダート強め＋木曜軽め/プール」か、すでに仕上がっていれば無理に2本追う必要はありません。'
+  },
+  {
+    title: '5. プールを賢く活用する',
+    desc: '脚元に不安がある馬、疲労を増やしたくない週、体重の微調整にはプールが最適。能力アップではなく「安全管理」の切り札として使います。'
+  }
+];
+
+export const balancePhilosophy = {
+  title: '最強馬を作るなら調教を偏らせない',
+  description: 'スピードだけ高くてもスタミナがなければ距離が持ちません。スタミナだけ高くてもスピード不足ではG1を勝てません。さらに大舞台の叩き合いでは勝負根性と気性が勝敗を分けます。',
+  roles: [
+    { track: 'ダート', role: 'スタミナの基盤構築', icon: '🏜️' },
+    { track: '坂路・芝', role: 'スピードと瞬発力の向上', icon: '⚡' },
+    { track: '併せ馬', role: '勝負根性・気性の点火', icon: '🔥' },
+    { track: 'プール', role: '疲労を残さない体調＆馬体重管理', icon: '🏊' }
+  ]
+};
+
 export const trainingCourses: TrainingCourse[] = [
+  {
+    id: 'dirt',
+    name: 'ダートコース',
+    intensity: '強め',
+    effects: {
+      speed: 2,
+      stamina: 5,
+      power: 4,
+      guts: 3,
+      fatigue: 3,
+      weightChange: '-3kg',
+      risk: '小'
+    },
+    summary: '【おすすめ度 ★★★★★】スタミナを鍛える基本調教。芝より脚元への負担が小さく安全。普段の育成の中心として最も安定。迷ったらダート強め。',
+    bestFor: 'デビュー前の土台作り、スタミナ強化、普段の基本ローテーション。'
+  },
+  {
+    id: 'slope',
+    name: '坂路コース',
+    intensity: '強め',
+    effects: {
+      speed: 4,
+      stamina: 3,
+      power: 5,
+      guts: 3,
+      fatigue: 4,
+      weightChange: '-3kg',
+      risk: '極小'
+    },
+    summary: '【おすすめ度 ★★★★★】スピードを鍛える優秀な調教。最大の特長は「調教そのもので脚元を故障する心配がない」こと。ただし疲労がたまりやすい。',
+    bestFor: 'デビュー前のスピード強化、故障を避けたい素質馬。疲労時は休養やプールに切り替え。'
+  },
   {
     id: 'turf',
     name: '芝コース',
-    intensity: '一杯',
+    intensity: '強め',
     effects: {
       speed: 5,
       stamina: 2,
@@ -14,72 +155,40 @@ export const trainingCourses: TrainingCourse[] = [
       weightChange: '-4kg',
       risk: '中'
     },
-    summary: 'スピードと瞬発力を集中的に強化。脚元への負荷がやや高いため連闘時には注意。',
-    bestFor: 'レース2週前の追切、スピード能力の限界突破を狙う仕上げ。'
+    summary: '【おすすめ度 ★★★★☆】スピードを鍛える重要調教。強めでスピードが大きく伸びるが、脚元への負担が大きく故障リスク高め。基本は「強め」中心で連発厳禁。',
+    bestFor: 'デビュー前のスピード上乗せ、スピード不足の補強。坂路と併用して故障を防ぐ。'
   },
   {
-    id: 'dirt',
-    name: 'ダートコース',
-    intensity: '一杯',
+    id: 'combined',
+    name: '併せ馬 (ダート/芝)',
+    intensity: '強め',
     effects: {
-      speed: 2,
-      stamina: 5,
+      speed: 4,
+      stamina: 4,
       power: 4,
-      guts: 3,
-      fatigue: 4,
+      guts: 5,
+      fatigue: 5,
       weightChange: '-4kg',
       risk: '中'
     },
-    summary: 'スタミナと推進力を徹底強化。長距離戦やダート重賞を睨む馬の基礎体力作りに最適。',
-    bestFor: 'スタミナ底上げ期、菊花賞や春天を目指すクラシック候補。'
+    summary: '【おすすめ度 ★★★★★】勝負根性と気性を鍛える強力調教。他馬と並走して闘争心を引き出す。負担が大きく調子変動もあるため、毎週連発や絶好調馬への無理使いは避ける。',
+    bestFor: 'デビュー前の勝負根性強化、G1大舞台前の気合注入。デビュー前に数回入れる程度で充分。'
   },
   {
     id: 'wood',
     name: 'ウッドチップ',
     intensity: '強め',
     effects: {
-      speed: 4,
-      stamina: 3,
+      speed: 3,
+      stamina: 4,
       power: 3,
       guts: 3,
-      fatigue: 3,
+      fatigue: 4,
       weightChange: '-3kg',
       risk: '小'
     },
-    summary: '総合力をバランス良く向上。脚元への負担が芝・ダートより軽く、日常の基本調教に最適。',
-    bestFor: '普段のベースアップ、体質に不安がある馬の常用調教。'
-  },
-  {
-    id: 'slope',
-    name: '坂路コース',
-    intensity: '一杯',
-    effects: {
-      speed: 4,
-      stamina: 3,
-      power: 5,
-      guts: 4,
-      fatigue: 3,
-      weightChange: '-3kg',
-      risk: '極小'
-    },
-    summary: 'パワーと加速力を鍛える最強コース。脚元への負担が最も少なく、故障率が極めて低い。',
-    bestFor: '仕上がり途上、脚元の弱い馬、直線の急坂（中山・阪神）対策。'
-  },
-  {
-    id: 'poly',
-    name: 'ポリトラック',
-    intensity: '馬なり',
-    effects: {
-      speed: 3,
-      stamina: 2,
-      power: 2,
-      guts: 2,
-      fatigue: 1,
-      weightChange: '-1kg',
-      risk: '極小'
-    },
-    summary: '全天候型コース。疲労を残さず微調整できる。故障明けやレース当週の最終微調整に。',
-    bestFor: 'レース当週の最終追い、体重微調整、連闘時。'
+    summary: '【おすすめ度 ★★★★☆】脚元負担を抑えてスタミナを鍛えられる。ただし「疲労が抜けにくくなる」特徴があるため、レース中よりデビュー前の余裕がある時期に向く。',
+    bestFor: 'デビュー前などレース出走まで日数がある時期のスタミナ育成。'
   },
   {
     id: 'pool',
@@ -94,8 +203,8 @@ export const trainingCourses: TrainingCourse[] = [
       weightChange: '-2kg',
       risk: '極小'
     },
-    summary: '脚元への負担ゼロで心肺機能を鍛え、体重を絞る。疲労を抜くリフレッシュ効果もあり。',
-    bestFor: '太め残り解消、脚元（ソエ・不安）を痛めている馬の運動維持。'
+    summary: '【おすすめ度 ★★★★☆】脚元への負担ゼロ・疲労が残りにくい。スタミナも微増。能力アップ量は控えめだが、馬体重調整・レース前微調整・疲労ケアに最適。',
+    bestFor: 'レース週の最終微調整、太め残り解消、脚元不安馬の運動維持、木曜の疲労抜き。'
   },
   {
     id: 'gate',
@@ -110,24 +219,8 @@ export const trainingCourses: TrainingCourse[] = [
       weightChange: '-1kg',
       risk: '極小'
     },
-    summary: 'スタートダッシュの成否を分ける重要調教。出遅れ癖を解消し、先行力を安定化。',
-    bestFor: 'デビュー前必須、出遅れが目立つ逃げ・先行馬の矯正。'
-  },
-  {
-    id: 'combined',
-    name: '併せ馬 (ウッド/芝/坂路)',
-    intensity: '一杯',
-    effects: {
-      speed: 5,
-      stamina: 3,
-      power: 4,
-      guts: 5,
-      fatigue: 5,
-      weightChange: '-5kg',
-      risk: '高'
-    },
-    summary: '他馬と並走することで闘争心（根性・気合い）を極限まで引き出す。効果は絶大だが疲労も最大。',
-    bestFor: 'G1前哨戦や本番前の勝負仕上げ、気合い乗りの悪いズブい馬の刺激。'
+    summary: 'スタートダッシュの成否を分ける重要調教。出遅れ癖を解消し、先行力を安定化。デビュー前には必須。',
+    bestFor: 'デビュー前合格必須、出遅れが目立つ逃げ・先行馬の矯正。'
   }
 ];
 
