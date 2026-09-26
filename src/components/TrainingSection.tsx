@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { trainingCourses, growthTypes, weightAndFatigueGuide } from '../data/trainingData';
+import { preDebutRoutines, postDebutRoutines, purposeRecipes } from '../data/genericTrainingRecipes';
 import { WeightCalculator } from './WeightCalculator';
-import { Dumbbell, Scale, HeartPulse, Sparkles, AlertCircle, ShieldAlert, Award, Calculator } from 'lucide-react';
+import { Dumbbell, Scale, HeartPulse, Sparkles, AlertCircle, ShieldAlert, Award, Calculator, Calendar, Zap, CheckCircle2 } from 'lucide-react';
 
 interface TrainingSectionProps {
   searchQuery: string;
 }
 
 export const TrainingSection: React.FC<TrainingSectionProps> = ({ searchQuery }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'calculator' | 'courses' | 'weight' | 'growth'>('calculator');
+  const [activeSubTab, setActiveSubTab] = useState<'routines' | 'calculator' | 'courses' | 'weight' | 'growth'>('routines');
 
   const filteredCourses = trainingCourses.filter(c =>
     c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -54,13 +55,22 @@ export const TrainingSection: React.FC<TrainingSectionProps> = ({ searchQuery })
               <span>育成・レース調整の極意</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-              調教メニュー＆ベスト体重・疲労管理
+              調教メニュー＆デビュー前・後汎用調整法
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-              コース毎のステータス上昇値、故障を防ぐ疲労コントロール、そして勝敗を直結する「ベスト馬体重計算機」を搭載。
+              入厩からゲート試験・デビュー仕上げ、レース間（中1〜4週）の調整ルーティン、そしてベスト馬体重一発計算機を完全網羅。
             </p>
           </div>
           <div className="flex flex-wrap gap-1.5 bg-slate-800/80 border border-slate-700 p-1.5 rounded-xl">
+            <button
+              onClick={() => setActiveSubTab('routines')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                activeSubTab === 'routines' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Calendar className="w-3.5 h-3.5" />
+              <span>汎用調教メニュー</span>
+            </button>
             <button
               onClick={() => setActiveSubTab('calculator')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
@@ -98,14 +108,135 @@ export const TrainingSection: React.FC<TrainingSectionProps> = ({ searchQuery })
         </div>
       </div>
 
-      {/* サブタブ0: ベスト体重一発計算機 */}
+      {/* サブタブ1: 汎用調教メニュー（デビュー前・後＆目的別レシピ） */}
+      {activeSubTab === 'routines' && (
+        <div className="space-y-6">
+          {/* ① デビュー前ルーティン */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+              <h3 className="text-base sm:text-lg font-black text-white">
+                【デビュー前】入厩〜ゲート合格〜デビュー仕上げ 汎用スケジュール
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4">
+              {preDebutRoutines.map((routine) => (
+                <div key={routine.id} className="bg-slate-800/70 border border-slate-700 rounded-2xl p-4 sm:p-5 shadow-xl space-y-3.5">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-slate-700/60 pb-2.5">
+                    <div>
+                      <h4 className="text-sm sm:text-base font-extrabold text-emerald-300">
+                        {routine.title}
+                      </h4>
+                      <span className="text-xs text-slate-400">{routine.targetSituation}</span>
+                    </div>
+                    <span className="text-xs font-mono font-bold bg-slate-900 px-2.5 py-1 rounded text-amber-300 border border-slate-700 self-start sm:self-auto">
+                      期間: {routine.pace}
+                    </span>
+                  </div>
+
+                  {/* ステップ一覧 */}
+                  <div className="space-y-2.5">
+                    {routine.steps.map((st, i) => (
+                      <div key={i} className="bg-slate-900/60 border border-slate-700/50 rounded-xl p-3 text-xs space-y-1">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span className="font-bold text-amber-400">{st.timing}</span>
+                          <span className="text-slate-400 font-mono text-[11px]">目標体重: {st.weightTarget}</span>
+                        </div>
+                        <div className="font-bold text-white text-sm">
+                          {st.menu}
+                        </div>
+                        <p className="text-slate-300 text-[11px] leading-relaxed">
+                          {st.purpose}
+                        </p>
+                        <ul className="pt-1 text-[11px] text-slate-400 space-y-0.5 border-t border-slate-800">
+                          {st.keyPoints.map((kp, k) => (
+                            <li key={k} className="flex items-start gap-1">
+                              <span className="text-emerald-400">•</span>
+                              <span>{kp}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* 黄金ルール */}
+                  <div className="bg-emerald-950/40 border border-emerald-500/30 rounded-xl p-3 text-xs text-emerald-200">
+                    <strong>★ 黄金鉄則:</strong> {routine.goldenRule}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ② デビュー後レース間調整ルーティン */}
+          <div className="space-y-4 pt-4 border-t border-slate-700">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-400"></span>
+              <h3 className="text-base sm:text-lg font-black text-white">
+                【デビュー後】出走間隔別（中1週・中2週・中3週・中4週）汎用調整メニュー
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {postDebutRoutines.map((routine) => (
+                <div key={routine.id} className="bg-slate-800/70 border border-slate-700 rounded-2xl p-4 sm:p-5 shadow-xl flex flex-col justify-between space-y-3">
+                  <div>
+                    <div className="border-b border-slate-700/60 pb-2 mb-2">
+                      <h4 className="text-sm sm:text-base font-extrabold text-blue-300">
+                        {routine.title}
+                      </h4>
+                      <p className="text-xs text-slate-400 mt-0.5">{routine.targetSituation}</p>
+                    </div>
+
+                    <div className="space-y-2">
+                      {routine.steps.map((st, i) => (
+                        <div key={i} className="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 text-xs space-y-0.5">
+                          <span className="font-bold text-amber-400 block text-[11px]">{st.timing}</span>
+                          <span className="font-bold text-white text-xs block">{st.menu}</span>
+                          <span className="text-[10px] text-slate-400 block">体重目安: {st.weightTarget}</span>
+                          <p className="text-[11px] text-slate-300 leading-snug">{st.purpose}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="bg-blue-950/40 border border-blue-500/30 rounded-xl p-2.5 text-xs text-blue-200">
+                    <strong>★ 要点:</strong> {routine.goldenRule}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ③ 目的別汎用調教レシピ */}
+          <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-4 sm:p-5 shadow-xl space-y-3">
+            <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+              <Zap className="w-4 h-4 text-amber-400" />
+              <span>目的別・即効調教レシピ（プリセット）</span>
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {purposeRecipes.map((recipe, idx) => (
+                <div key={idx} className="bg-slate-900/70 p-3 rounded-xl border border-slate-700/60 text-xs space-y-1">
+                  <h4 className="font-black text-amber-300">{recipe.purpose}</h4>
+                  <div className="font-bold text-white bg-slate-800 p-1.5 rounded">{recipe.menu}</div>
+                  <p className="text-slate-300 text-[11px]">{recipe.effect}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* サブタブ2: ベスト体重一発計算機 */}
       {activeSubTab === 'calculator' && (
         <div className="space-y-4">
           <WeightCalculator />
         </div>
       )}
 
-      {/* サブタブ1: 調教コース一覧 */}
+      {/* サブタブ3: 調教コース一覧 */}
       {activeSubTab === 'courses' && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -173,35 +304,12 @@ export const TrainingSection: React.FC<TrainingSectionProps> = ({ searchQuery })
               </div>
             ))}
           </div>
-
-          {/* 調教黄金ルール */}
-          <div className="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 sm:p-5 mt-4">
-            <h4 className="text-sm font-bold text-white flex items-center gap-2 mb-2">
-              <Award className="w-4 h-4 text-amber-400" />
-              <span>現役トップブリーダーが実践する「レース2週前・当週の調教ローテ」</span>
-            </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300 mt-2">
-              <div className="bg-slate-900/60 p-3 rounded-xl border border-slate-700/60">
-                <span className="font-bold text-emerald-400 block mb-1">【王道仕上げパターン】</span>
-                ・2週前：坂路一杯 または ウッド強め（しっかり負荷）<br />
-                ・1週前：芝強め または 併せ馬強め（本追い切り）<br />
-                ・当週：ポリトラック馬なり または 坂路馬なり（息を整える微調整）
-              </div>
-              <div className="bg-slate-900/60 p-3 rounded-xl border border-slate-700/60">
-                <span className="font-bold text-amber-400 block mb-1">【脚元不安・虚弱馬パターン】</span>
-                ・2週前：坂路一杯（脚元負担小でパワー強化）<br />
-                ・1週前：坂路強め＋プール（スタミナ絞り）<br />
-                ・当週：プール調教（疲労抜き＆体重キープ）
-              </div>
-            </div>
-          </div>
         </div>
       )}
 
-      {/* サブタブ2: 体重＆疲労管理 */}
+      {/* サブタブ4: 体重＆疲労管理 */}
       {activeSubTab === 'weight' && (
         <div className="space-y-6">
-          {/* ベスト体重 */}
           <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-4 sm:p-6 shadow-xl">
             <div className="flex items-center gap-2.5 text-amber-400 mb-3">
               <Scale className="w-5 h-5" />
@@ -291,7 +399,7 @@ export const TrainingSection: React.FC<TrainingSectionProps> = ({ searchQuery })
         </div>
       )}
 
-      {/* サブタブ3: 成長タイプ別戦略 */}
+      {/* サブタブ5: 成長タイプ別戦略 */}
       {activeSubTab === 'growth' && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { TabType } from './types';
 import { Header } from './components/Header';
 import { Navigation } from './components/Navigation';
+import { MatingSimulator } from './components/MatingSimulator';
 import { BreedingSection } from './components/BreedingSection';
 import { StallionSection } from './components/StallionSection';
 import { TrainingSection } from './components/TrainingSection';
@@ -13,7 +14,7 @@ import { MyHorsesSection } from './components/MyHorsesSection';
 import { Footer } from './components/Footer';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('breeding');
+  const [activeTab, setActiveTab] = useState<TabType>('mating');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   return (
@@ -39,9 +40,10 @@ export const App: React.FC = () => {
 
       {/* メインコンテンツ */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-4 py-5 sm:py-7">
+        {activeTab === 'mating' && <MatingSimulator />}
         {activeTab === 'breeding' && <BreedingSection searchQuery={searchQuery} />}
-        {activeTab === 'stallions' && <StallionSection searchQuery={searchQuery} />}
         {activeTab === 'training' && <TrainingSection searchQuery={searchQuery} />}
+        {activeTab === 'stallions' && <StallionSection searchQuery={searchQuery} />}
         {activeTab === 'comments' && <CommentsSection searchQuery={searchQuery} />}
         {activeTab === 'races' && <RaceTacticsSection searchQuery={searchQuery} />}
         {activeTab === 'money' && <MoneySection searchQuery={searchQuery} />}

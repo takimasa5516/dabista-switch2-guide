@@ -1,9 +1,10 @@
 // 攻略データの型定義
 
 export type TabType =
-  | 'breeding'    // 配合理論
+  | 'mating'      // 配合シミュレータ（新機能！）
+  | 'breeding'    // 配合理論解説
   | 'stallions'   // 種牡馬DB
-  | 'training'    // 調教・体重
+  | 'training'    // 調教・体重・汎用メニュー
   | 'comments'    // コメント・診断
   | 'races'       // レース・作戦・騎手
   | 'money'       // 資金稼ぎ
@@ -41,19 +42,19 @@ export interface Stallion {
   id: string;
   name: string;
   generation: '最新・Switch2' | '現代主要' | 'レジェンド';
-  fee: string; // 種付け料（万円）
-  distance: string; // 距離適性 例: 1800m-2400m
+  fee: string;
+  distance: string;
   growth: '早熟' | '普通' | '晩成' | '持続';
   dirt: '◎' | '◯' | '△' | '✕';
-  temper: 'A' | 'B' | 'C'; // 気性
-  performance: 'A' | 'B' | 'C'; // 実績
-  resilience: 'A' | 'B' | 'C'; // 底力
-  stamina: 'A' | 'B' | 'C'; // 体質
-  stability: 'A' | 'B' | 'C'; // 安定
-  lineage: string; // 父系
-  damSireLine: string; // 母父系
-  bestMatch: string; // おすすめ配合・相性の良い牝馬系統
-  comment: string; // 特徴・攻略ワンポイント
+  temper: 'A' | 'B' | 'C';
+  performance: 'A' | 'B' | 'C';
+  resilience: 'A' | 'B' | 'C';
+  stamina: 'A' | 'B' | 'C';
+  stability: 'A' | 'B' | 'C';
+  lineage: string;
+  damSireLine: string;
+  bestMatch: string;
+  comment: string;
 }
 
 // 調教メニュー
@@ -62,11 +63,11 @@ export interface TrainingCourse {
   name: string;
   intensity: '馬なり' | '強め' | '一杯';
   effects: {
-    speed: number;    // 1-5
-    stamina: number;  // 1-5
-    power: number;    // 1-5
-    guts: number;     // 1-5
-    fatigue: number;  // 1-5
+    speed: number;
+    stamina: number;
+    power: number;
+    guts: number;
+    fatigue: number;
     weightChange: string;
     risk: '極小' | '小' | '中' | '高';
   };
@@ -113,10 +114,10 @@ export interface Jockey {
   type: 'レジェンド' | 'トップ' | 'ベテラン' | '若手・中堅' | '短期免許';
   rank: 'S' | 'A' | 'B';
   preferredTactic: '逃げ' | '先行' | '差し' | '追込' | '自在';
-  finishStrength: '特A' | 'A' | 'B'; // 直線の追い
-  temperControl: '特A' | 'A' | 'B'; // 折り合い・気性宥め
-  startSkill: '特A' | 'A' | 'B'; // ゲート・出遅れ回避
-  bigRaceBonus: boolean; // G1勝負強さ
+  finishStrength: '特A' | 'A' | 'B';
+  temperControl: '特A' | 'A' | 'B';
+  startSkill: '特A' | 'A' | 'B';
+  bigRaceBonus: boolean;
   description: string;
   advice: string;
 }
@@ -126,7 +127,7 @@ export interface RaceTacticInfo {
   tactic: '逃げ' | '先行' | '差し' | '追込';
   pros: string[];
   cons: string[];
-  antiTrafficTip: string; // 前壁・不利回避の秘訣
+  antiTrafficTip: string;
   recommendedFor: string;
 }
 
@@ -163,8 +164,8 @@ export interface TrophyRace {
   id: string;
   name: string;
   grade: 'G1' | 'Jpn1' | '海外G1';
-  course: string; // 例: 芝2400m
-  racecourse: string; // 例: 東京競馬場
+  course: string;
+  racecourse: string;
   season: '2歳春' | '2歳秋' | '3歳春' | '3歳秋' | '4歳上春' | '4歳上秋' | '通年';
   category: 'クラシック' | '古馬王道' | '短距離・マイル' | '牝馬限定' | 'ダート' | '2歳G1' | '障害' | '海外遠征';
 }
@@ -172,7 +173,7 @@ export interface TrophyRace {
 export interface SpecialTitle {
   id: string;
   title: string;
-  races: string[]; // 必要なレースID
+  races: string[];
   reward: string;
   description: string;
 }

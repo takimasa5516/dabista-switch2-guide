@@ -1,6 +1,6 @@
 import React from 'react';
 import { TabType } from '../types';
-import { Dna, Award, Dumbbell, MessageSquareQuote, Flag, Coins, Trophy, BookOpen } from 'lucide-react';
+import { Dna, Award, Dumbbell, MessageSquareQuote, Flag, Coins, Trophy, BookOpen, Sparkles, BookMarked } from 'lucide-react';
 
 interface NavigationProps {
   activeTab: TabType;
@@ -10,27 +10,34 @@ interface NavigationProps {
 export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab }) => {
   const navItems = [
     {
+      id: 'mating' as TabType,
+      label: '配合シミュレータ',
+      sub: '全327牝馬×237種牡馬判定',
+      icon: Sparkles,
+      badge: '強力',
+      activeColor: 'text-indigo-400 border-indigo-500 bg-indigo-500/10'
+    },
+    {
       id: 'breeding' as TabType,
-      label: '配合理論',
-      sub: '血統・ニックス・凝った配合',
+      label: '配合理論解説',
+      sub: '凝った配合・3代ロードマップ',
       icon: Dna,
       activeColor: 'text-blue-400 border-blue-500 bg-blue-500/10'
+    },
+    {
+      id: 'training' as TabType,
+      label: '調教・汎用メニュー',
+      sub: 'デビュー前・後ローテ＆体重計算',
+      icon: Dumbbell,
+      badge: '必携',
+      activeColor: 'text-emerald-400 border-emerald-500 bg-emerald-500/10'
     },
     {
       id: 'stallions' as TabType,
       label: '種牡馬DB',
       sub: 'イクイノックス等最新スペック',
       icon: Award,
-      badge: '最新',
       activeColor: 'text-amber-400 border-amber-500 bg-amber-500/10'
-    },
-    {
-      id: 'training' as TabType,
-      label: '調教・体重',
-      sub: 'ベスト体重計算機・疲労防止',
-      icon: Dumbbell,
-      badge: '即算',
-      activeColor: 'text-emerald-400 border-emerald-500 bg-emerald-500/10'
     },
     {
       id: 'comments' as TabType,
@@ -44,7 +51,6 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab 
       label: 'レース・作戦',
       sub: '前壁対策・騎手・凱旋門賞',
       icon: Flag,
-      badge: '必勝',
       activeColor: 'text-rose-400 border-rose-500 bg-rose-500/10'
     },
     {
