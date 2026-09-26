@@ -1,14 +1,33 @@
 import React, { useState, useMemo } from 'react';
 import { masterData, defaultEngine, RawBroodmare, RawStallion, MatingResult } from '../utils/breedingEngine';
-import { Dna, Sparkles, AlertTriangle, CheckCircle2, Search, Filter, ArrowRight, DollarSign, Award, ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  Dna,
+  Sparkles,
+  AlertTriangle,
+  CheckCircle2,
+  Search,
+  Filter,
+  ArrowRight,
+  DollarSign,
+  Award,
+  ChevronDown,
+  ChevronUp,
+  BookOpen,
+  X,
+  ListFilter
+} from 'lucide-react';
 
 export const MatingSimulator: React.FC = () => {
   // 繁殖牝馬リスト（デフォルトはキャバレイ）
   const [selectedMareName, setSelectedMareName] = useState<string>('キャバレイ');
   const [mareSearch, setMareSearch] = useState<string>('');
+  const [showMareCatalog, setShowMareCatalog] = useState<boolean>(false);
+  const [mareSortBy, setMareSortBy] = useState<'price_desc' | 'price_asc' | 'speed' | 'stamina' | 'name'>('price_desc');
+  const [mareTypeFilter, setMareTypeFilter] = useState<'all' | 'auction' | 'private'>('all');
   
   // シミュレーション対象種牡馬（個別モード時）
   const [selectedSireName, setSelectedSireName] = useState<string>('イクイノックス');
+  const [sireSearch, setSireSearch] = useState<string>('');
   const [mode, setMode] = useState<'recommend' | 'individual'>('recommend');
 
   // 絞り込みフィルター（おすすめモード用）
@@ -78,6 +97,32 @@ export const MatingSimulator: React.FC = () => {
     );
   }, [mareSearch]);
 
+  // カタログ用牝馬リスト（ソート・絞り込み）
+  const catalogMares = useMemo(() => {
+    return masterData.broodmare
+      .filter(m => {
+        if (mareSearch && !m.NAME.toLowerCase().includes(mareSearch.toLowerCase())) return false;
+        if (mareTypeFilter === 'private' && m.TYPE !== 1) return false;
+        if (mareTypeFilter === 'auction' && m.TYPE === 1) return false;
+        return true;
+      })
+      .sort((a, b) => {
+        if (mareSortBy === 'price_desc') return b.PRICE - a.PRICE;
+        if (mareSortBy === 'price_asc') return a.PRICE - b.PRICE;
+        if (mareSortBy === 'speed') return b.SPEED - a.SPEED;
+        if (mareSortBy === 'stamina') return b.STAMINA - a.STAMINA;
+        if (mareSortBy === 'name') return a.NAME.localeCompare(b.NAME, 'ja');
+        return 0;
+      });
+  }, [mareSearch, mareTypeFilter, mareSortBy]);
+
+  // 個別モード用種牡馬検索
+  const filteredIndividualSires = useMemo(() => {
+    return masterData.stallion.filter(s =>
+      s.NAME.toLowerCase().includes(sireSearch.toLowerCase())
+    );
+  }, [sireSearch]);
+
   return (
     <div className="space-y-6 sm:space-y-8 animate-fadeIn">
       {/* 導入バナー */}
@@ -119,17 +164,26 @@ export const MatingSimulator: React.FC = () => {
       {/* 繁殖牝馬選択セクション */}
       <div className="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <label className="text-xs font-bold text-slate-300 block mb-1">
-              ① 配合したい繁殖牝馬を選択（全{masterData.broodmare.length}頭）
-            </label>
-            <div className="flex items-center gap-2">
+          <div className="space-y-1.5 flex-1">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-slate-300 block">
+                ① 配合する繁殖牝馬を選択（全{masterData.broodmare.length}頭 網羅）
+              </label>
+              <button
+                onClick={() => setShowMareCatalog(true)}
+                className="text-xs font-bold text-blue-400 hover:text-blue-300 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition-all cursor-pointer"
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>全327頭カタログ表を開く</span>
+              </button>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
               <select
                 value={selectedMareName}
                 onChange={(e) => setSelectedMareName(e.target.value)}
-                className="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm font-bold text-white focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[200px]"
+                className="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm font-bold text-white focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[220px] max-w-full"
               >
-                {filteredMares.slice(0, 100).map((m) => (
+                {filteredMares.map((m) => (
                   <option key={m.ID} value={m.NAME}>
                     {m.NAME} ({m.PRICE}万円 {m.TYPE === 1 ? '◆庭先' : ''})
                   </option>
@@ -138,13 +192,16 @@ export const MatingSimulator: React.FC = () => {
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="牝馬名で絞り込み..."
+                  placeholder="牝馬名で検索 (全327頭)..."
                   value={mareSearch}
                   onChange={(e) => setMareSearch(e.target.value)}
-                  className="bg-slate-900/90 border border-slate-700 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-44"
+                  className="bg-slate-900/90 border border-slate-700 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-52"
                 />
                 <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
               </div>
+              <span className="text-[11px] text-slate-400 font-mono">
+                該当: {filteredMares.length} / 327頭
+              </span>
             </div>
           </div>
 
@@ -172,6 +229,175 @@ export const MatingSimulator: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* 全327頭 繁殖牝馬カタログモーダル */}
+      {showMareCatalog && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 animate-fadeIn">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-5xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            {/* モーダルヘッダー */}
+            <div className="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
+              <div className="flex items-center gap-2.5">
+                <BookOpen className="w-5 h-5 text-blue-400" />
+                <div>
+                  <h3 className="text-base sm:text-lg font-black text-white">
+                    全327頭 繁殖牝馬スペック完全カタログ
+                  </h3>
+                  <span className="text-xs text-slate-400 font-mono">
+                    表示中: {catalogMares.length}頭 / 全327頭収録
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowMareCatalog(false)}
+                className="p-2 hover:bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-all cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* 検索・絞り込み・ソートバー */}
+            <div className="p-3 sm:p-4 bg-slate-800/60 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="牝馬名で絞り込み..."
+                    value={mareSearch}
+                    onChange={(e) => setMareSearch(e.target.value)}
+                    className="bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-44"
+                  />
+                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                </div>
+
+                <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-700">
+                  <button
+                    onClick={() => setMareTypeFilter('all')}
+                    className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+                      mareTypeFilter === 'all' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    すべて ({masterData.broodmare.length})
+                  </button>
+                  <button
+                    onClick={() => setMareTypeFilter('auction')}
+                    className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+                      mareTypeFilter === 'auction' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    セリ市 (278)
+                  </button>
+                  <button
+                    onClick={() => setMareTypeFilter('private')}
+                    className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+                      mareTypeFilter === 'private' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    庭先限定 (49)
+                  </button>
+                </div>
+              </div>
+
+              {/* ソートセレクター */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-slate-400 font-medium">並び替え:</span>
+                <select
+                  value={mareSortBy}
+                  onChange={(e) => setMareSortBy(e.target.value as any)}
+                  className="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white font-bold focus:outline-none focus:ring-1 focus:ring-blue-500"
+                >
+                  <option value="price_desc">価格高い順</option>
+                  <option value="price_asc">価格安い順</option>
+                  <option value="speed">スピード順</option>
+                  <option value="stamina">スタミナ順</option>
+                  <option value="name">五十音順</option>
+                </select>
+              </div>
+            </div>
+
+            {/* カタログテーブル */}
+            <div className="overflow-y-auto flex-1 p-2 sm:p-4">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs text-slate-300">
+                  <thead className="bg-slate-800/90 text-[11px] uppercase tracking-wider text-slate-400 font-bold sticky top-0">
+                    <tr>
+                      <th className="p-2.5 rounded-l-lg">繁殖牝馬名</th>
+                      <th className="p-2.5">取引</th>
+                      <th className="p-2.5 text-right">価格</th>
+                      <th className="p-2.5 text-center">SP / ST / PW</th>
+                      <th className="p-2.5 text-center">ダート</th>
+                      <th className="p-2.5 text-center">体質/気性</th>
+                      <th className="p-2.5">系統</th>
+                      <th className="p-2.5 text-center rounded-r-lg">配合</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/60">
+                    {catalogMares.map((mare) => (
+                      <tr
+                        key={mare.ID}
+                        className={`hover:bg-slate-800/50 transition-colors ${
+                          selectedMareName === mare.NAME ? 'bg-blue-950/40 border-l-2 border-blue-500' : ''
+                        }`}
+                      >
+                        <td className="p-2.5 font-bold text-white whitespace-nowrap">
+                          {mare.NAME}
+                        </td>
+                        <td className="p-2.5 whitespace-nowrap">
+                          {mare.TYPE === 1 ? (
+                            <span className="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.5 rounded font-bold">
+                              庭先
+                            </span>
+                          ) : (
+                            <span className="text-[10px] text-slate-400">
+                              セリ
+                            </span>
+                          )}
+                        </td>
+                        <td className="p-2.5 font-mono text-amber-300 font-bold text-right whitespace-nowrap">
+                          {mare.PRICE}万円
+                        </td>
+                        <td className="p-2.5 font-mono text-center text-slate-200 whitespace-nowrap">
+                          {mare.SPEED} / {mare.STAMINA} / {mare.POWER}
+                        </td>
+                        <td className="p-2.5 text-center font-bold text-slate-300 whitespace-nowrap">
+                          {mare.DIRT}
+                        </td>
+                        <td className="p-2.5 text-center text-emerald-400 font-bold whitespace-nowrap">
+                          {mare.KENKO} / {mare.KISYO}
+                        </td>
+                        <td className="p-2.5 text-slate-400 text-[11px] whitespace-nowrap">
+                          {mare.SYSTEM_LITTELE || mare.SYSTEM_BIG}
+                        </td>
+                        <td className="p-2.5 text-center whitespace-nowrap">
+                          <button
+                            onClick={() => {
+                              setSelectedMareName(mare.NAME);
+                              setShowMareCatalog(false);
+                            }}
+                            className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-2.5 py-1 rounded text-xs transition-all shadow cursor-pointer"
+                          >
+                            選択
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* モーダルフッター */}
+            <div className="p-3 bg-slate-900 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
+              <span>※Switch2版『ダービースタリオン2』に登場する全327頭の繁殖牝馬データ完全収録</span>
+              <button
+                onClick={() => setShowMareCatalog(false)}
+                className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-1.5 rounded-lg font-bold cursor-pointer transition-all"
+              >
+                閉じる
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* モードA: おすすめ種牡馬検索 */}
       {mode === 'recommend' && (
@@ -406,21 +632,38 @@ export const MatingSimulator: React.FC = () => {
       {mode === 'individual' && currentSire && individualResult && (
         <div className="space-y-6">
           {/* 種牡馬選択ドロップダウン */}
-          <div className="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 sm:p-5 shadow-xl">
-            <label className="text-xs font-bold text-slate-300 block mb-1">
-              ② 配合する種牡馬を選択（全{masterData.stallion.length}頭）
-            </label>
-            <select
-              value={selectedSireName}
-              onChange={(e) => setSelectedSireName(e.target.value)}
-              className="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm font-bold text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-80"
-            >
-              {masterData.stallion.map((s) => (
-                <option key={s.ID} value={s.NAME}>
-                  {s.NAME} ({s.PRICE}万円 / {s.GROWN} / 実績{s.JISSEKI})
-                </option>
-              ))}
-            </select>
+          <div className="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 sm:p-5 shadow-xl space-y-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <label className="text-xs font-bold text-slate-300 block">
+                ② 配合する種牡馬を選択（全{masterData.stallion.length}頭 網羅）
+              </label>
+              <span className="text-[11px] text-slate-400 font-mono">
+                検索該当: {filteredIndividualSires.length} / 237頭
+              </span>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <select
+                value={selectedSireName}
+                onChange={(e) => setSelectedSireName(e.target.value)}
+                className="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm font-bold text-white focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[240px] max-w-full"
+              >
+                {filteredIndividualSires.map((s) => (
+                  <option key={s.ID} value={s.NAME}>
+                    {s.NAME} ({s.PRICE}万円 / {s.GROWN} / 実績{s.JISSEKI})
+                  </option>
+                ))}
+              </select>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="種牡馬名で検索 (全237頭)..."
+                  value={sireSearch}
+                  onChange={(e) => setSireSearch(e.target.value)}
+                  className="bg-slate-900/90 border border-slate-700 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-52"
+                />
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+              </div>
+            </div>
           </div>
 
           {/* 配合結果レポートカード */}
