@@ -84,10 +84,41 @@ export interface GrowthType {
   keyComments: string[];
 }
 
+// 配合理論の優先順位
+export interface BreedingTheoryPriority {
+  rank: number;
+  theoryName: string;
+  tier: 'Tier 1' | 'Tier 2' | 'Tier 3' | 'Tier 4' | 'Tier 5';
+  role: string;
+  whyPriority: string;
+  targetStage: string;
+  synergyWith: string[];
+}
+
+export interface RecommendedBreedingRecipe {
+  name: string;
+  targetGoal: string;
+  theories: string[];
+  description: string;
+  merits: string[];
+  caution: string;
+}
+
+// 幼駒の能力判定ステップ
+export interface FoalEvaluationStep {
+  step: number;
+  period: string;
+  title: string;
+  targetComment: string;
+  importance: 'S' | 'A' | 'B';
+  checkCriteria: string;
+  actionGuide: string;
+}
+
 // 入厩前コメント
 export interface PreStablingComment {
   id: string;
-  category: 'スピード' | 'スタミナ' | '勝負根性' | '気性' | '体質' | '成長型' | '雰囲気・大物' | '父・母似';
+  category: 'スピード' | 'スタミナ' | 'パワー' | '勝負根性' | '気性' | '体質' | '成長型' | '雰囲気・大物' | '父・母似' | '0歳（当歳）' | 'バネ（総合）';
   text: string;
   timing: string;
   condition: string;

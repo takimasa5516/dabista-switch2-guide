@@ -1,22 +1,44 @@
 import React, { useState } from 'react';
-import { preStablingComments, commentChecklistTimeline, switch2CommentFeatures } from '../data/commentsData';
+import {
+  preStablingComments,
+  commentChecklistTimeline,
+  switch2CommentFeatures,
+  foalEvaluationSteps,
+  baneCommentDeepDive
+} from '../data/commentsData';
 import { PreStablingComment } from '../types';
 import { SimulatorSection } from './SimulatorSection';
-import { MessageSquareQuote, Calendar, Sparkles, Filter, CheckCircle2, HelpCircle, FileText, Award } from 'lucide-react';
+import {
+  MessageSquareQuote,
+  Calendar,
+  Sparkles,
+  Filter,
+  CheckCircle2,
+  HelpCircle,
+  FileText,
+  Award,
+  Zap,
+  TrendingUp,
+  AlertCircle,
+  Compass
+} from 'lucide-react';
 
 interface CommentsSectionProps {
   searchQuery: string;
 }
 
 export const CommentsSection: React.FC<CommentsSectionProps> = ({ searchQuery }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'comments' | 'simulator'>('comments');
+  const [activeSubTab, setActiveSubTab] = useState<'flow' | 'comments' | 'bane' | 'simulator'>('flow');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedImportance, setSelectedImportance] = useState<string>('all');
 
   const categories = [
     'all',
+    '0歳（当歳）',
+    'バネ（総合）',
     'スピード',
     'スタミナ',
+    'パワー',
     '勝負根性',
     '気性',
     '体質',
@@ -55,20 +77,40 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ searchQuery })
     <div className="space-y-6 sm:space-y-8 animate-fadeIn">
       {/* 導入バナー */}
       <div className="bg-gradient-to-r from-amber-950/60 via-orange-900/40 to-slate-900 border border-amber-800/40 rounded-2xl p-4 sm:p-6 shadow-xl">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20 mb-2">
               <MessageSquareQuote className="w-3.5 h-3.5" />
-              <span>育成期・牧場の金言</span>
+              <span>幼駒能力判定＆選別完全攻略</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-              入厩前コメント完全逆引き辞典＆素質診断
+              幼駒の能力判定基準 ＆ 入厩前コメント完全辞書
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-              1歳9月から2歳入厩までの牧場コメントの出現条件を解析。チェックするだけで素質を判定する自動診断ツールも完備。
+              0歳当歳から1歳春の「バネ」、秋の「スピード・スタミナ」、入厩直前まで。素質馬を1頭も見逃さない4ステップ判定基準と出現条件を網羅。
             </p>
           </div>
-          <div className="flex items-center gap-1.5 bg-slate-800/80 border border-slate-700 p-1.5 rounded-xl">
+
+          {/* サブタブ切替ボタン */}
+          <div className="flex flex-wrap items-center gap-1.5 bg-slate-800/80 border border-slate-700 p-1.5 rounded-xl self-stretch lg:self-auto justify-start sm:justify-end">
+            <button
+              onClick={() => setActiveSubTab('flow')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                activeSubTab === 'flow' ? 'bg-amber-600 text-white shadow-md' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Compass className="w-3.5 h-3.5" />
+              <span>4Step判定フロー</span>
+            </button>
+            <button
+              onClick={() => setActiveSubTab('bane')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                activeSubTab === 'bane' ? 'bg-amber-600 text-white shadow-md' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Zap className="w-3.5 h-3.5" />
+              <span>春のバネ深掘り</span>
+            </button>
             <button
               onClick={() => setActiveSubTab('comments')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
@@ -122,9 +164,105 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ searchQuery })
         ))}
       </div>
 
-      {activeSubTab === 'simulator' ? (
-        <SimulatorSection />
-      ) : (
+      {/* サブタブ1: 4Step能力判定フロー */}
+      {activeSubTab === 'flow' && (
+        <div className="space-y-5">
+          <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-4 sm:p-6 shadow-xl space-y-4">
+            <div className="flex items-center gap-2 border-b border-slate-700/80 pb-3">
+              <TrendingUp className="w-5 h-5 text-amber-400" />
+              <div>
+                <h3 className="text-base sm:text-lg font-black text-white">
+                  幼駒能力判定 4ステップ選別フローチャート
+                </h3>
+                <p className="text-xs text-slate-400">
+                  当歳誕生から2歳入厩まで、どの時期に何を確認して育成・選別方針を決めるべきかの完全手順
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {foalEvaluationSteps.map((step) => (
+                <div
+                  key={step.step}
+                  className="bg-slate-900/80 border border-slate-700/80 rounded-xl p-4 space-y-2.5 relative overflow-hidden"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-black px-2.5 py-0.5 rounded-md bg-amber-500 text-slate-950">
+                      STEP {step.step}
+                    </span>
+                    <span className="text-[11px] font-mono text-amber-300 font-bold bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
+                      {step.period}
+                    </span>
+                  </div>
+
+                  <h4 className="text-sm font-bold text-white">
+                    {step.title}
+                  </h4>
+
+                  <div className="bg-slate-800/60 p-2 rounded-lg border border-slate-700/50 text-xs">
+                    <span className="text-[10px] text-slate-400 block font-bold">【注目コメント】</span>
+                    <span className="text-amber-200 font-medium">{step.targetComment}</span>
+                  </div>
+
+                  <div className="space-y-1 text-xs">
+                    <p className="text-slate-300">
+                      <strong className="text-emerald-400">判定基準: </strong>{step.checkCriteria}
+                    </p>
+                    <p className="text-slate-300">
+                      <strong className="text-amber-400">アクション方針: </strong>{step.actionGuide}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-amber-950/20 border border-amber-500/30 rounded-xl p-3.5 flex items-start gap-2.5 text-xs text-amber-200">
+              <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
+              <span>
+                <strong>実戦の黄金鉄則: </strong>
+                春に「バネ」が出なくても、秋に「かなりのスピード」が出れば短距離〜マイルG1を勝てる快速馬になります。1歳春の段階で安易に売却せず、必ず1歳9〜10月の本判定まで見届けましょう！
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* サブタブ2: 春のバネ深掘り解説 */}
+      {activeSubTab === 'bane' && (
+        <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-4 sm:p-6 shadow-xl space-y-5">
+          <div className="flex items-center gap-2 border-b border-slate-700/80 pb-3">
+            <Zap className="w-5 h-5 text-amber-400" />
+            <div>
+              <h3 className="text-base sm:text-lg font-black text-white">
+                {baneCommentDeepDive.title}
+              </h3>
+              <p className="text-xs text-slate-300 mt-0.5">
+                {baneCommentDeepDive.summary}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {baneCommentDeepDive.points.map((pt, idx) => (
+              <div
+                key={idx}
+                className="bg-slate-900/80 border border-slate-700/70 p-4 rounded-xl space-y-2"
+              >
+                <h4 className="text-sm font-bold text-amber-300 flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  {pt.title}
+                </h4>
+                <p className="text-xs text-slate-300 leading-relaxed pl-5">
+                  {pt.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* サブタブ3: コメント辞書 */}
+      {activeSubTab === 'comments' && (
         <>
           {/* 育成タイムライン（カレンダー） */}
           <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-4 sm:p-5 shadow-lg">
@@ -235,6 +373,11 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ searchQuery })
             ))}
           </div>
         </>
+      )}
+
+      {/* サブタブ4: 素質自動診断 */}
+      {activeSubTab === 'simulator' && (
+        <SimulatorSection />
       )}
     </div>
   );
