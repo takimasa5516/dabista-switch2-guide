@@ -3,7 +3,9 @@ import {
   breedingTheories,
   inbreedingAncestors,
   breedingTheoryPriorities,
-  recommendedBreedingRecipes
+  recommendedBreedingRecipes,
+  earlyRecommendedBroodmares,
+  strongestBroodmares
 } from '../data/breedingData';
 import { BreedingTheory } from '../types';
 import {
@@ -20,7 +22,10 @@ import {
   Layers,
   Flame,
   Star,
-  Info
+  Info,
+  Heart,
+  TrendingUp,
+  Award
 } from 'lucide-react';
 
 interface BreedingSectionProps {
@@ -28,7 +33,8 @@ interface BreedingSectionProps {
 }
 
 export const BreedingSection: React.FC<BreedingSectionProps> = ({ searchQuery }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'priority' | 'recipes' | 'theories' | 'ancestors'>('priority');
+  const [activeSubTab, setActiveSubTab] = useState<'priority' | 'recipes' | 'broodmares' | 'theories' | 'ancestors'>('priority');
+  const [broodmareType, setBroodmareType] = useState<'early' | 'strongest'>('early');
   const [selectedTheory, setSelectedTheory] = useState<string | null>('kottamatch');
   const [filterBadge, setFilterBadge] = useState<string>('all');
 
@@ -111,6 +117,15 @@ export const BreedingSection: React.FC<BreedingSectionProps> = ({ searchQuery })
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>目的別王道レシピ</span>
+            </button>
+            <button
+              onClick={() => setActiveSubTab('broodmares')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                activeSubTab === 'broodmares' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Heart className="w-3.5 h-3.5 text-rose-400" />
+              <span>おすすめ牝馬ランキング</span>
             </button>
             <button
               onClick={() => setActiveSubTab('theories')}
@@ -276,6 +291,169 @@ export const BreedingSection: React.FC<BreedingSectionProps> = ({ searchQuery })
                   <div className="bg-amber-950/20 border border-amber-500/20 p-2.5 rounded-lg text-xs text-amber-200 mt-3">
                     <strong>注意点:</strong> {recipe.caution}
                   </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* サブタブ: おすすめ繁殖牝馬ランキング（公式エンジン採点TOP） */}
+      {activeSubTab === 'broodmares' && (
+        <div className="space-y-6">
+          <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-4 sm:p-6 shadow-xl space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-700/80 pb-3">
+              <div className="flex items-center gap-2">
+                <Heart className="w-5 h-5 text-rose-400" />
+                <div>
+                  <h3 className="text-base sm:text-lg font-black text-white">
+                    おすすめ繁殖牝馬ランキング（公式全頭採点データ準拠）
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    全327頭の繁殖牝馬×全237頭の種牡馬（全77,499通り）を公式エンジンで評価した実力派牝馬たち
+                  </p>
+                </div>
+              </div>
+
+              {/* 切替トグル */}
+              <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-700 self-start sm:self-auto">
+                <button
+                  onClick={() => setBroodmareType('early')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    broodmareType === 'early'
+                      ? 'bg-rose-600 text-white shadow-sm'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  序盤おすすめ TOP7 (8,000万以下)
+                </button>
+                <button
+                  onClick={() => setBroodmareType('strongest')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    broodmareType === 'strongest'
+                      ? 'bg-rose-600 text-white shadow-sm'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  最強繁殖牝馬 TOP10 (制限なし)
+                </button>
+              </div>
+            </div>
+
+            {/* 解説コラム */}
+            <div className="bg-slate-900/70 border border-slate-700/70 rounded-xl p-3 sm:p-4 text-xs text-slate-300 leading-relaxed">
+              {broodmareType === 'early' ? (
+                <div>
+                  <strong className="text-amber-400">【序盤おすすめ牝馬の選定基準】</strong><br />
+                  購入価格8,000万円以下の通常販売牝馬から、安価な種牡馬（100万円未満〜数百万円）と「ニックス★★★」「凝った配合」が成立しやすく、初期資金が少なくても高確率で重賞馬を生み出せる層の厚い牝馬を厳選。
+                </div>
+              ) : (
+                <div>
+                  <strong className="text-amber-400">【最強繁殖牝馬の選定基準】</strong><br />
+                  価格制限・種牡馬制限を完全撤廃。海外種牡馬（GalileoやDubawi等）や高額種牡馬も含めた上位20頭の配合スコア合計でランキング。全世代で最強のチャンピオン・BC制覇馬を量産する最高峰牝馬たちです。
+                </div>
+              )}
+            </div>
+
+            {/* 牝馬カード一覧 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {(broodmareType === 'early' ? earlyRecommendedBroodmares : strongestBroodmares).map((bm) => (
+                <div
+                  key={bm.rank}
+                  className={`p-4 sm:p-5 rounded-2xl border flex flex-col justify-between transition-all ${
+                    bm.rank === 1
+                      ? 'bg-gradient-to-br from-rose-950/30 via-slate-900 to-amber-950/20 border-rose-500/50 shadow-lg'
+                      : bm.rank <= 3
+                      ? 'bg-slate-900/80 border-amber-500/40'
+                      : 'bg-slate-900/60 border-slate-700/60'
+                  }`}
+                >
+                  <div className="space-y-3">
+                    {/* ヘッダー */}
+                    <div className="flex items-start justify-between gap-2 border-b border-slate-800 pb-2.5">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className={`text-xs font-black px-2 py-0.5 rounded-md ${
+                            bm.rank === 1 ? 'bg-rose-500 text-white' :
+                            bm.rank === 2 ? 'bg-amber-500 text-slate-950 font-black' :
+                            bm.rank === 3 ? 'bg-amber-700 text-amber-100 font-bold' :
+                            'bg-slate-800 text-slate-300'
+                          }`}>
+                            第{bm.rank}位
+                          </span>
+                          <span className="text-[11px] text-slate-400">{bm.lineage}</span>
+                        </div>
+                        <h4 className="text-base sm:text-lg font-black text-white">
+                          {bm.name}
+                        </h4>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm font-black text-amber-400 font-mono">
+                          {bm.priceText}
+                        </div>
+                        <span className="text-[10px] text-slate-400 block">
+                          上位20頭: {bm.top20TotalScore}pt
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* 能力ステータス */}
+                    <div className="grid grid-cols-5 gap-1 text-center bg-slate-800/60 p-2 rounded-xl text-xs">
+                      <div>
+                        <span className="text-[10px] text-slate-400 block">スピード</span>
+                        <span className="font-bold text-white">{bm.speed}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-slate-400 block">スタミナ</span>
+                        <span className="font-bold text-white">{bm.stamina}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-slate-400 block">パワー</span>
+                        <span className="font-bold text-white">{bm.power}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-slate-400 block">体質/気性</span>
+                        <span className="font-bold text-emerald-400">{bm.health} / {bm.temper}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-slate-400 block">ダート</span>
+                        <span className="font-bold text-amber-300">{bm.dirt}</span>
+                      </div>
+                    </div>
+
+                    {/* タグ */}
+                    <div className="flex flex-wrap gap-1.5">
+                      {bm.theoryTags.map((tag, i) => (
+                        <span key={i} className="text-[11px] px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-300 border border-rose-500/20 font-medium">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* ベスト配合パートナー */}
+                    <div className="bg-slate-800/80 p-3 rounded-xl border border-slate-700/80 space-y-1">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-slate-400 font-medium">最初の推奨相手:</span>
+                        <span className="text-amber-400 font-mono font-bold">配合スコア {bm.partnerScore}pt</span>
+                      </div>
+                      <div className="text-xs font-bold text-white flex items-center justify-between">
+                        <span>{bm.partnerSire} ({bm.partnerSireFee})</span>
+                        <span className="text-slate-300 font-normal font-mono">初期合計: {bm.totalInitialCost}</span>
+                      </div>
+                    </div>
+
+                    {/* 特徴・解説 */}
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      {bm.features}
+                    </p>
+                  </div>
+
+                  {bm.caution && (
+                    <div className="mt-3 pt-2 border-t border-slate-800 text-[11px] text-yellow-300/90 flex items-start gap-1">
+                      <AlertTriangle className="w-3.5 h-3.5 text-yellow-400 flex-shrink-0 mt-0.5" />
+                      <span>{bm.caution}</span>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

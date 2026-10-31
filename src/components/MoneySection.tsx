@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { moneyGuides, initialFarmExpansionPriority, allStaffList } from '../data/moneyData';
-import { Coins, TrendingUp, AlertTriangle, CheckCircle2, Building, DollarSign, Sparkles, Users, UserCheck } from 'lucide-react';
+import { moneyGuides, initialFarmExpansionPriority, allStaffList, allFarmFacilities } from '../data/moneyData';
+import { Coins, TrendingUp, AlertTriangle, CheckCircle2, Building, DollarSign, Sparkles, Users, UserCheck, Search, Filter, ShieldCheck, Globe } from 'lucide-react';
 
 interface MoneySectionProps {
   searchQuery: string;
@@ -8,8 +8,11 @@ interface MoneySectionProps {
 
 export const MoneySection: React.FC<MoneySectionProps> = ({ searchQuery }) => {
   const [selectedStage, setSelectedStage] = useState<string>('all');
+  const [facilityCategory, setFacilityCategory] = useState<string>('all');
+  const [facilitySearch, setFacilitySearch] = useState<string>('');
 
-  const stages = ['all', '初期設定（モード選択）', 'ミッション活用術', '実機馬券術＆小ネタ', '中盤以降の経営術'];
+  const stages = ['all', '初期設定（モード選択）', 'ミッション活用術', '実機馬券術＆小ネタ', '中盤以降の経営術', '終盤（牧場完成後）'];
+  const facilityCategories = ['all', '基本施設', '調教コース', '療養・医療', '地蔵・祈願', '特別施設'];
 
   const filteredGuides = moneyGuides.filter((guide) => {
     const matchesSearch =
@@ -21,6 +24,18 @@ export const MoneySection: React.FC<MoneySectionProps> = ({ searchQuery }) => {
     const matchesStage = selectedStage === 'all' || guide.stage === selectedStage;
 
     return matchesSearch && matchesStage;
+  });
+
+  const filteredFacilities = allFarmFacilities.filter((fac) => {
+    const q = facilitySearch.toLowerCase() || searchQuery.toLowerCase();
+    const matchesQuery =
+      fac.name.toLowerCase().includes(q) ||
+      fac.effect.toLowerCase().includes(q) ||
+      fac.condition.toLowerCase().includes(q) ||
+      fac.category.toLowerCase().includes(q);
+
+    const matchesCat = facilityCategory === 'all' || fac.category === facilityCategory;
+    return matchesQuery && matchesCat;
   });
 
   return (
@@ -37,7 +52,7 @@ export const MoneySection: React.FC<MoneySectionProps> = ({ searchQuery }) => {
               破産回避＆資金稼ぎの黄金テクニック
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-              序盤の破産を防ぐコスパ配合から、馬券による合法錬金術、地方交流重賞の空き巣狙い、セリ市での高値売却まで網羅。
+              序盤の破産を防ぐコスパ配合から、馬券による合法錬金術、地方交流重賞の空き巣狙い、セリ市での高値売却、海外種牡馬の解放手順まで網羅。
             </p>
           </div>
           <div className="bg-slate-800/80 border border-slate-700 p-3 rounded-xl text-center self-stretch sm:self-auto min-w-[150px]">
@@ -106,7 +121,7 @@ export const MoneySection: React.FC<MoneySectionProps> = ({ searchQuery }) => {
               <div className="bg-slate-900/40 rounded-xl p-3 border border-slate-800">
                 <span className="text-xs font-bold text-amber-300 block mb-1.5 flex items-center gap-1">
                   <Sparkles className="w-3.5 h-3.5" />
-                  序盤に推奨されるコスパ最強種牡馬
+                  推奨種牡馬・関連名馬
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {guide.recommendedSiresOrHorses.map((sire, idx) => (
@@ -161,6 +176,92 @@ export const MoneySection: React.FC<MoneySectionProps> = ({ searchQuery }) => {
                   </h4>
                   <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">{item.reason}</p>
                 </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 公式実機マスタ：全39件 牧場施設完全一覧カタログ */}
+      <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-4 sm:p-6 shadow-xl space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-700/80 pb-3">
+          <div className="flex items-center gap-2">
+            <Building className="w-5 h-5 text-amber-400" />
+            <div>
+              <h3 className="text-base sm:text-lg font-bold text-white">
+                全39件 牧場施設・拡張条件・効果 完全一覧（実機マスタ）
+              </h3>
+              <p className="text-xs text-slate-400">
+                事務所・走路コース・病院・温泉から地蔵★5（性別100%確定）まで網羅
+              </p>
+            </div>
+          </div>
+          <span className="text-[11px] font-mono text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-full self-start sm:self-auto">
+            該当: {filteredFacilities.length} / 39施設
+          </span>
+        </div>
+
+        {/* 施設フィルター＆検索バー */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full no-scrollbar">
+            {facilityCategories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setFacilityCategory(cat)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap cursor-pointer ${
+                  facilityCategory === cat
+                    ? 'bg-amber-600 text-white shadow-md font-bold'
+                    : 'bg-slate-800 text-slate-400 hover:text-white'
+                }`}
+              >
+                {cat === 'all' ? '全カテゴリ' : cat}
+              </button>
+            ))}
+          </div>
+
+          <div className="relative min-w-[220px]">
+            <input
+              type="text"
+              placeholder="施設名・効果・解放条件で検索..."
+              value={facilitySearch}
+              onChange={(e) => setFacilitySearch(e.target.value)}
+              className="w-full pl-8 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+            />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+          </div>
+        </div>
+
+        {/* 施設カードグリッド */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {filteredFacilities.map((fac) => (
+            <div
+              key={fac.id}
+              className={`p-3.5 rounded-xl border flex flex-col justify-between transition-all ${
+                fac.star >= 4 || fac.name === 'ウォーキングマシン' || fac.name === '検疫所'
+                  ? 'bg-amber-950/20 border-amber-500/40 shadow-sm'
+                  : 'bg-slate-900/70 border-slate-700/60'
+              }`}
+            >
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-black text-white">{fac.name}</span>
+                    <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                      {'★'.repeat(fac.star)}
+                    </span>
+                  </div>
+                  <span className="text-xs font-bold text-amber-400 font-mono">
+                    {fac.costText}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-line mb-2">
+                  {fac.effect}
+                </p>
+              </div>
+
+              <div className="pt-2 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+                <span>解放条件:</span>
+                <span className="text-amber-200 font-medium">{fac.condition}</span>
               </div>
             </div>
           ))}
@@ -223,4 +324,3 @@ export const MoneySection: React.FC<MoneySectionProps> = ({ searchQuery }) => {
     </div>
   );
 };
-

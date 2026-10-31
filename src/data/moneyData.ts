@@ -1,4 +1,4 @@
-import { MoneyGuide } from '../types';
+import { MoneyGuide, FarmFacility } from '../types';
 
 export interface StaffMember {
   id: number;
@@ -26,6 +26,49 @@ export const allStaffList: StaffMember[] = [
   { id: 14, role: '併せ走路スタッフ', name: '二藤 駆', monthlyFee: 50, effect: '併せ馬調教で根性を引き出し、早期からの活躍を促す', condition: '施設「事務所」を3段階目まで拡張' }
 ];
 
+// 公式実機データ：全39件の牧場施設完全マスタ
+export const allFarmFacilities: FarmFacility[] = [
+  { id: 1, name: '事務所', star: 1, cost: 0, costText: '無料（初期）', effect: '牧場に関する記録を管理。拡張することで雇用できるスタッフが増加', condition: '初期から', category: '基本施設' },
+  { id: 2, name: '事務所', star: 2, cost: 5000, costText: '5,000万円', effect: '拡張することで雇用できるスタッフが更に増加（代田しおり、知野継造等）', condition: '条件なし（資金のみ）', category: '基本施設' },
+  { id: 3, name: '事務所', star: 3, cost: 10000, costText: '1億円', effect: 'たくさんのスタッフが雇える最大事務所（獣医Dr.啓司、理学療法士、走路スタッフ等）', condition: '事務所★★建設', category: '基本施設' },
+  { id: 4, name: '厩舎・牧柵', star: 1, cost: 0, costText: '無料（初期）', effect: '繁殖牝馬3頭・種牡馬2頭を管理可能', condition: '初期から', category: '基本施設' },
+  { id: 5, name: '厩舎・牧柵', star: 2, cost: 5000, costText: '5,000万円', effect: '繁殖牝馬6頭・種牡馬4頭に拡張', condition: '条件なし（資金のみ）', category: '基本施設' },
+  { id: 6, name: '厩舎・牧柵', star: 3, cost: 10000, costText: '1億円', effect: '繁殖牝馬12頭・種牡馬6頭に拡張', condition: '厩舎・牧柵★★建設', category: '基本施設' },
+  { id: 7, name: '厩舎・牧柵', star: 4, cost: 15000, costText: '1億5,000万円', effect: '繁殖牝馬24頭・種牡馬8頭に拡張（最大レベル）', condition: '厩舎・牧柵★★★建設', category: '基本施設' },
+  { id: 8, name: '病院', star: 1, cost: 15000, costText: '1億5,000万円', effect: '入厩馬のための医療施設。骨折などの故障防止に役立つ', condition: '入厩馬を自分で放牧', category: '療養・医療' },
+  { id: 9, name: '病院', star: 2, cost: 30000, costText: '3億円', effect: '入厩馬の骨折などの重度故障防止効果がさらに向上', condition: '病院★建設', category: '療養・医療' },
+  { id: 10, name: '温泉', star: 1, cost: 15000, costText: '1億5,000万円', effect: '入厩馬のための療養施設。屈腱炎などの故障防止に役立つ', condition: '入厩馬を自分で帰厩', category: '療養・医療' },
+  { id: 11, name: '温泉', star: 2, cost: 30000, costText: '3億円', effect: '屈腱炎などの故障防止に加え、故障時の治りも格段に早くなる', condition: '温泉★建設', category: '療養・医療' },
+  { id: 12, name: '飼い葉畑', star: 1, cost: 15000, costText: '1億5,000万円', effect: '馬のご飯となる飼い葉を育てる。放牧中の馬体重回復に役立つ', condition: '入厩馬を10回調教', category: '療養・医療' },
+  { id: 13, name: '森林馬道', star: 1, cost: 15000, costText: '1億5,000万円', effect: 'リラックス効果が得られる自然散歩道。放牧中の疲労回復を大幅促進', condition: 'レースに5回出走', category: '療養・医療' },
+  { id: 14, name: '森林馬道', star: 2, cost: 30000, costText: '3億円', effect: '放牧中の疲労回復促進に加え、休み明け初戦もイレ込みにくくなる', condition: '森林馬道★建設', category: '療養・医療' },
+  { id: 15, name: '子宝地蔵', star: 1, cost: 10000, costText: '1億円', effect: '子宝祈願のご利益。種付け時に受胎しやすくなる', condition: '種付けを3回実施', category: '地蔵・祈願' },
+  { id: 16, name: '馬頭観音', star: 1, cost: 10000, costText: '1億円', effect: '健康祈願のご利益。牧場の繁殖馬たちがより長生きできる', condition: 'レースに3回勝利', category: '地蔵・祈願' },
+  { id: 17, name: '芝コース', star: 1, cost: 8000, costText: '8,000万円', effect: '育成中に芝調教を実施。入厩時のスピード基礎能力が高まる', condition: '入厩馬を30回芝調教', category: '調教コース' },
+  { id: 18, name: '芝コース', star: 2, cost: 25000, costText: '2億5,000万円', effect: '入厩時のスピード能力がさらに大幅に高まる', condition: '芝コース★建設', category: '調教コース' },
+  { id: 19, name: '坂路コース', star: 1, cost: 8000, costText: '8,000万円', effect: '育成中に坂路調教を実施。入厩時のパワー基礎能力が高まる', condition: '入厩馬を30回坂路調教', category: '調教コース' },
+  { id: 20, name: '坂路コース', star: 2, cost: 25000, costText: '2億5,000万円', effect: '入厩時のパワー能力がさらに大幅に高まる', condition: '坂路コース★建設', category: '調教コース' },
+  { id: 21, name: '併せコース', star: 1, cost: 8000, costText: '8,000万円', effect: '育成中に併せ調教を実施。入厩時の勝負根性が高まる', condition: '入厩馬を30回併せ調教', category: '調教コース' },
+  { id: 22, name: '併せコース', star: 2, cost: 25000, costText: '2億5,000万円', effect: '入厩時の勝負根性がさらに大幅に高まる', condition: '併せコース★建設', category: '調教コース' },
+  { id: 23, name: 'ダートコース', star: 1, cost: 8000, costText: '8,000万円', effect: '育成中にダート調教を実施。入厩時のスタミナ基礎能力が高まる', condition: '入厩馬を30回ダート調教', category: '調教コース' },
+  { id: 24, name: 'ダートコース', star: 2, cost: 25000, costText: '2億5,000万円', effect: '入厩時のスタミナ能力がさらに大幅に高まる', condition: 'ダートコース★建設', category: '調教コース' },
+  { id: 25, name: 'ゲート', star: 1, cost: 2000, costText: '2,000万円', effect: '育成中にゲート練習を実施。入厩時のスタート能力が高まる', condition: '入厩馬を30回ゲート調教', category: '調教コース' },
+  { id: 26, name: 'ウォーキングマシン', star: 1, cost: 100000, costText: '10億円', effect: '放牧中に運動ができる施設。放牧中の能力低下抑制・気合乗り・馬体重によい影響', condition: '牧場開設10周年', category: '特別施設' },
+  { id: 27, name: '蹄鉄工房', star: 1, cost: 10000, costText: '1億円', effect: '馬の蹄鉄を作る工房。建設することでレース中の落鉄を完全に防止', condition: 'レースに10回出走', category: '特別施設' },
+  { id: 28, name: '検疫所', star: 1, cost: 30000, costText: '3億円', effect: '海外馬の検疫施設。毎年3月に海外種牡馬株（Galileo等）を受け入れ可能（購入後は無料種付け）', condition: '海外種牡馬の産駒を2歳セリで購入', category: '特別施設' },
+  { id: 29, name: '検疫所', star: 2, cost: 60000, costText: '6億円', effect: '海外種牡馬株の受け入れ枠がさらに拡張', condition: '検疫所★建設', category: '特別施設' },
+  { id: 30, name: '牡地蔵', star: 1, cost: 50000, costText: '5億円', effect: '種付け時にお参りすることで産まれてくる仔馬が牡馬になりやすくなる', condition: '牡馬を30頭生産', category: '地蔵・祈願' },
+  { id: 31, name: '牡地蔵', star: 2, cost: 60000, costText: '6億円', effect: '牡馬誕生の確率がさらに上昇', condition: '牡地蔵★建設', category: '地蔵・祈願' },
+  { id: 32, name: '牡地蔵', star: 3, cost: 70000, costText: '7億円', effect: '牡馬誕生の確率がさらに上昇', condition: '牡地蔵★★建設', category: '地蔵・祈願' },
+  { id: 33, name: '牡地蔵', star: 4, cost: 80000, costText: '8億円', effect: '牡馬誕生の確率が大幅に上昇', condition: '牡地蔵★★★建設', category: '地蔵・祈願' },
+  { id: 34, name: '牡地蔵', star: 5, cost: 90000, costText: '9億円', effect: '【究極効果】産まれてくる仔馬が「必ず牡馬」になる！（最大レベル）', condition: '牡地蔵★★★★建設', category: '地蔵・祈願' },
+  { id: 35, name: '牝地蔵', star: 1, cost: 50000, costText: '5億円', effect: '種付け時にお参りすることで産まれてくる仔馬が牝馬になりやすくなる', condition: '牝馬を30頭生産', category: '地蔵・祈願' },
+  { id: 36, name: '牝地蔵', star: 2, cost: 60000, costText: '6億円', effect: '牝馬誕生の確率がさらに上昇', condition: '牝地蔵★建設', category: '地蔵・祈願' },
+  { id: 37, name: '牝地蔵', star: 3, cost: 70000, costText: '7億円', effect: '牝馬誕生の確率がさらに上昇', condition: '牝地蔵★★建設', category: '地蔵・祈願' },
+  { id: 38, name: '牝地蔵', star: 4, cost: 80000, costText: '8億円', effect: '牝馬誕生の確率が大幅に上昇', condition: '牝地蔵★★★建設', category: '地蔵・祈願' },
+  { id: 39, name: '牝地蔵', star: 5, cost: 90000, costText: '9億円', effect: '【究極効果】産まれてくる仔馬が「必ず牝馬」になる！（最大レベル）', condition: '牝地蔵★★★★建設', category: '地蔵・祈願' }
+];
+
 export const moneyGuides: MoneyGuide[] = [
   {
     id: 'mode-selection',
@@ -49,8 +92,8 @@ export const moneyGuides: MoneyGuide[] = [
     summary: 'Switch2版で新設された「ミッション機能」は、序盤最大の資金＆施設供給源です。',
     steps: [
       '【ビギナーミッション即時制覇】ダビスタチャンネル動画視聴（50万）、育成馬入厩（50万）、調教（50万）、出走登録（50万）、出走（50万）、勝利（50万）などをこなすだけで手元に数百万円が即時入金される。',
-      '【重要施設がミッション報酬で解放】10回出走で「蹄鉄工房」、3回勝利で「馬頭観音」が無料獲得できる。',
-      '【育成ミッション】入厩頭数（3頭、5頭、10頭…）に応じて追加の賞金やptが継続的に支給される。'
+      '【重要施設がミッション報酬・出走数で解放】10回出走で「蹄鉄工房（落鉄防止）」、3回勝利で「馬頭観音」が解放。',
+      '【調教数による各コース解放】芝・坂路・ダート・併せ・ゲートを各30回調教することで、牧場にコースを建設できるようになり、仔馬の入厩時ステータスが恒久的に底上げされる！'
     ],
     caution: 'ゲーム開始直後はミッション一覧を確認し、達成できるものから順次クリアしていきましょう。'
   },
@@ -83,13 +126,32 @@ export const moneyGuides: MoneyGuide[] = [
       'シニスターミニスター産駒、ヘニーヒューズ産駒'
     ],
     caution: '地方競馬への遠征は輸送による馬体重減少（-4kg〜-8kg）が発生するため、出走前に太め（+4kg）に仕上げておくのがコツ。'
+  },
+  {
+    id: 'overseas-stallion-unlock',
+    stage: '終盤（牧場完成後）',
+    title: '【重要解禁】海外種牡馬（Galileo・Dubawi等）株の購入＆無料種付け手順',
+    summary: '世界最強クラスの海外種牡馬（Galileo、Dubawi、Frankel、Cracksman等）は初期状態では種付けできません。以下の手順で解禁します。',
+    steps: [
+      '【ステップ1】2歳セリ市で「父馬の名前が英語表記」の海外種牡馬産駒を落札・購入する。',
+      '【ステップ2】購入後、牧場施設「検疫所（建設費3億円）」が建設可能になるため即建設する。',
+      '【ステップ3】検疫所があると、毎年3月に海外種牡馬の種牡馬株を購入できるようになる。',
+      '【ステップ4】株を購入した海外種牡馬は、以降毎年の種付け料が「完全無料（0円）」で配合可能になる！'
+    ],
+    recommendedSiresOrHorses: [
+      'Galileo（サドラーズウェルズ系・最強牝馬ラヴズオンリーミー等と神配合）',
+      'Dubawi（ドバイミレニアム系・レディオブオペラやサマーハと抜群の相性）',
+      'Cracksman（見事＋凝った配合が狙える優良海外馬）'
+    ],
+    caution: 'サンデーサイレンス、ノーザンテースト、リアルシャダイ、マルゼンスキー、オグリキャップなどの伝説名馬も初期は使用不可。特定ミッションや実績達成で解放されます。'
   }
 ];
 
 export const initialFarmExpansionPriority = [
-  { priority: '第1位', facility: '事務所拡張（2〜3段階）', cost: '約3,000万〜8,000万円', reason: '事務スタッフ（代田しおり：育成メモ自動記録）や各種走路スタッフ、獣医師を雇用するための絶対的前提条件！' },
-  { priority: '第2位', facility: '坂路コース', cost: '約5,000万円', reason: '脚元への負担を最小限に抑えながらスピードとパワーを鍛えられる最重要走路設備。' },
-  { priority: '第3位', facility: '温泉施設', cost: '約1億円', reason: '放牧時の疲労回復期間が短縮され、レースの間隔を詰めて効率よく賞金を稼げる。' },
-  { priority: '第4位', facility: 'ウォーキングマシン', cost: '約8,000万円', reason: '休養中や故障時の馬体重増加を抑制し、ベスト体重への戻りをスムーズにする。' },
-  { priority: '第5位', facility: '育成牧場拡張・厩舎増築', cost: '3億円〜', reason: '資金が数億円を超えてからでOK。序盤に手を出すと維持費で圧迫される。' }
+  { priority: '第1位', facility: '事務所拡張（★★〜★★★）', cost: '5,000万〜1億円', reason: '事務スタッフ（代田しおり：育成メモ自動記録）や各種走路スタッフ、獣医師を雇用するための絶対的前提条件！' },
+  { priority: '第2位', facility: '坂路コース（★〜★★）', cost: '8,000万〜2億5,000万円', reason: '入厩時のパワー能力が恒久的に底上げされる最重要走路施設。入厩馬の坂路調教30回で解放。' },
+  { priority: '第3位', facility: '温泉施設（★〜★★）', cost: '1億5,000万〜3億円', reason: '屈腱炎などの故障を防止し、★★で故障の治りも劇的に短縮。入厩馬を自分で帰厩させると解放。' },
+  { priority: '第4位', facility: '蹄鉄工房（★）', cost: '1億円', reason: 'レース中の落鉄事故を100%完全防止。レース10回出走で解放される。' },
+  { priority: '第5位', facility: '検疫所（★）', cost: '3億円', reason: '海外種牡馬株（Galileo等）を受け入れるための必須施設。海外種牡馬産駒の購入で解放。' },
+  { priority: '第6位', facility: '牡地蔵・牝地蔵（★〜★★★★★）', cost: '5億〜9億円', reason: 'エンドコンテンツ。★5まで拡張すると産まれてくる仔馬の性別が100%固定される超強力施設！' }
 ];

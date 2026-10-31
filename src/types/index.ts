@@ -7,9 +7,44 @@ export type TabType =
   | 'training'    // 調教・体重・汎用メニュー
   | 'comments'    // コメント・診断
   | 'races'       // レース・作戦・騎手
-  | 'money'       // 資金稼ぎ
+  | 'money'       // 牧場施設
   | 'trophy'      // G1制覇シート
   | 'myhorses';   // 愛馬カルテ
+
+export interface FarmFacility {
+  id: number;
+  name: string;
+  star: number;
+  cost: number;
+  costText: string;
+  effect: string;
+  condition: string;
+  category: '基本施設' | '調教コース' | '療養・医療' | '地蔵・祈願' | '特別施設';
+}
+
+// おすすめ繁殖牝馬
+export interface RecommendedBroodmare {
+  rank: number;
+  name: string;
+  price: number;
+  priceText: string;
+  lineage: string;
+  speed: number;
+  stamina: number;
+  power: number;
+  temper: string;
+  health: string;
+  dirt: string;
+  partnerSire: string;
+  partnerSireFee: string;
+  partnerScore: number;
+  totalInitialCost: string;
+  top20TotalScore: number;
+  theoryTags: string[];
+  features: string;
+  caution?: string;
+  type: '序盤コスパ' | '最強牝馬';
+}
 
 // 配合理論
 export interface BreedingTheory {
@@ -125,6 +160,42 @@ export interface PreStablingComment {
   importance: 'S' | 'A' | 'B' | 'C';
   description: string;
   advice: string;
+}
+
+// 牧場施設
+export interface FarmFacility {
+  id: number;
+  name: string;
+  star: number;
+  cost: number;
+  costText: string;
+  effect: string;
+  condition: string;
+  category: '基本施設' | '調教コース' | '療養・医療' | '地蔵・祈願' | '特別施設';
+}
+
+// おすすめ繁殖牝馬
+export interface RecommendedBroodmare {
+  rank: number;
+  name: string;
+  price: number;
+  priceText: string;
+  lineage: string;
+  speed: number;
+  stamina: number;
+  power: number;
+  temper: string;
+  health: string;
+  dirt: string;
+  partnerSire: string;
+  partnerSireFee: string;
+  partnerScore: number;
+  totalInitialCost: string;
+  top20TotalScore: number;
+  theoryTags: string[];
+  features: string;
+  caution?: string;
+  type: '序盤コスパ' | '最強牝馬';
 }
 
 // 資金稼ぎ
